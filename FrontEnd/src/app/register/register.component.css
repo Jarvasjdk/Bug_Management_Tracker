@@ -1,0 +1,21 @@
+
+.user_card {
+    
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    
+}
+
+.login_btn {
+    width: 100%;
+    background: #1B4F72;
+    color: white ;
+}
+
+.login_container {
+    padding: 0 32px;
+}
+
+
