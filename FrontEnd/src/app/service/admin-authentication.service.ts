@@ -12,7 +12,7 @@ export class AdminAuthenticationService {
   constructor(private http: HttpClient) {}
   public login(admin: Admin): Observable<HttpResponse<Admin>> { 
       
-    return this.http.post<Admin>(`${this.host}/adminPortal/login`, admin, { observe: 'response' });
+    return this.http.post<Admin>(`${this.host}/adminPortal/login`, admin, { observe: 'response' }); // observe will return headers which is where token is, it basically gives us access to headers, we needto return headers
   }
 
   public logOut(): void {
@@ -24,10 +24,8 @@ export class AdminAuthenticationService {
 
   public saveToken(token: string): void {
     this.token = token;
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', token); // store the actual token in the string
   }
-
-  
 
   public loadToken(): void {
     this.token = localStorage.getItem('token');

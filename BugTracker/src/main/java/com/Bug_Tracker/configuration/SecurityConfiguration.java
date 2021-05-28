@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().cors().and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
-                .and().authorizeRequests().antMatchers("/adminPortal/register","/adminPortal/login").permitAll()
+                .and().authorizeRequests().antMatchers("/user/register","/user/login","/adminPortal/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(JWTAuthorizationFilter, UsernamePasswordAuthenticationFilter.class); // this filter happens before all other filters

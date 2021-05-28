@@ -13,6 +13,7 @@ import { AdminAuthenticationService } from './service/admin-authentication.servi
 import { UserService } from './service/user.service';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AdminAuthInterceptor } from './interceptor/auth.admin-interceptor';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     
   ],
   providers: [  UserAuthenticationService,AdminAuthenticationService, UserService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } ],
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  {provide: HTTP_INTERCEPTORS, useClass: AdminAuthInterceptor, multi: true} ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

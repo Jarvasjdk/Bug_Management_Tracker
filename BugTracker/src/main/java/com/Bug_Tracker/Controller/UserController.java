@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("http://localost:4200")
 public class UserController {
     private UserService userService;
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager; // first you create instance of the class and autowire it, then can use this instance to access authenticate method
     private JWTTokenProvider jwtTokenProvider;
-    @Autowired
-    public UserController(UserService userService,@Qualifier("auth1") AuthenticationManager authenticationManager, JWTTokenProvider jwtTokenProvider) {
+    @Autowired // were using @Qualifier("auth1") implementation from our config file
+    public UserController(UserService userService, @Qualifier("auth1") AuthenticationManager authenticationManager, JWTTokenProvider jwtTokenProvider) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -40,10 +40,7 @@ public class UserController {
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
 
         return getJWTHeader(userPrincipal);
-
     }
-
-
 
     private HttpHeaders getJWTHeader(UserPrincipal user) {
         HttpHeaders headers = new HttpHeaders();
@@ -51,9 +48,6 @@ public class UserController {
 
         return headers;
     }
-
-
-
 
     private void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));

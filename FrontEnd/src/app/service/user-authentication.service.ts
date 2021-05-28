@@ -24,10 +24,15 @@ export class UserAuthenticationService {
       localStorage.removeItem('token');
       localStorage.removeItem('users');
     }
+    // this cannot be of type void since the interceptor needs something to return
+  // this doesnt return an observable and it should since my interceptor must return an observable
+   public register(user: User): Observable<User> {
+    return this.http.post<User>(`${this.host}/user/register`, user);
   
-   public register(user: User): void {
-     this.http.post<User>(`${this.host}/user/register`, user).subscribe();
   }
+  // note you dont want to subscibe here since you would need to unsubsribe, its best to keep everythin organized
+  // so do not subscribe here
+  
   
   public saveToken(token: string): void {
     this.token = token;

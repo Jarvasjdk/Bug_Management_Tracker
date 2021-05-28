@@ -64,7 +64,7 @@ public class JWTTokenProvider {
 
     public String getSubject(String token) {
         JWTVerifier verifier = getJWTVerifier();
-        return verifier.verify(token).getSubject();
+        return verifier.verify(token).getSubject(); // this is where its throwing exception
     }
 
     private boolean isTokenExpired(JWTVerifier verifier, String token) {

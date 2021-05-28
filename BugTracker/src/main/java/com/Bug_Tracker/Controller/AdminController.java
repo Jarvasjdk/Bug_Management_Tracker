@@ -46,7 +46,7 @@ public class AdminController {
         this.adminService = adminService;
         this.adminRepository = adminRepository;
     }
-// this is just here in backend, it is not implemented in frontend because we do not want users being able to register an admin account
+ //this is just here in backend, it is not implemented in frontend because we do not want users being able to register an admin account
     @PostMapping("/register")
     public void register(@RequestBody Admin user)    {
          adminService.register(user.getFirstName(),user.getLastName(),user.getUsername(),user.getPassword(), user.getEmail());
@@ -54,10 +54,10 @@ public class AdminController {
     }
 
 
+
     @PostMapping("/login")
-    @PreAuthorize("hasAnyAuthority('admin:login')")
     public HttpHeaders login(@RequestBody Admin adminUser) {
-        authenticate(adminUser.getUsername(),adminUser.getPassword());
+        authenticate(adminUser.getUsername(),adminUser.getPassword()); // success for kp 123
         Admin loginAdmin = adminRepository.findAdminByUsername(adminUser.getUsername());
         AdminPrinciple adminPrincipal = new AdminPrinciple(loginAdmin);
 

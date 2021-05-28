@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserAuthenticationService } from '../service/user-authentication.service';
 import { User } from '../model/user';
 
@@ -20,9 +20,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   public onRegister(user: User): void {
     
-      this.userAuthenticationService.register(user);
+      this.subscriptions.push(
+        this.userAuthenticationService.register(user).subscribe()
+        );
         
   }
+
+
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
