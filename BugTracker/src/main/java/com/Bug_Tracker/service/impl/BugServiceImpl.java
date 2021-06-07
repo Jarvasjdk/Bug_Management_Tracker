@@ -39,7 +39,7 @@ public class BugServiceImpl implements BugService {
 
 
     @Override
-    public void addNewBug(String description,String bugType,String bugLocation,String priority, boolean isActive)
+    public Bug addNewBug(String description,String bugType,String bugLocation,String priority, boolean isActive)
     { Bug bug = new Bug();
         bug.setBugId(generateBugId());
         bug.setBugDescription(description);
@@ -49,13 +49,13 @@ public class BugServiceImpl implements BugService {
         bug.setActive(isActive);
         bug.setBugLocation(bugLocation);
         bugRepository.save(bug);
-
+        return bug;
     }
 
 
 
     @Override
-    public void updateBug(String bugId,String bugDescription,String bugLocation, String bugPriority, String bugType, boolean Active)
+    public Bug updateBug(String bugId,String bugDescription,String bugLocation, String bugPriority, String bugType, boolean Active)
     { Bug bug = findBugByBugId(bugId);// currentBug
         bug.setBugDescription(bugDescription);
         bug.setBugLocation(bugLocation);
@@ -63,6 +63,7 @@ public class BugServiceImpl implements BugService {
         bug.setBugType(bugType);
         bug.setActive(Active);
         bugRepository.save(bug);
+        return bug;
 
     }
 

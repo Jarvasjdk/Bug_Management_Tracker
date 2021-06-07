@@ -3,6 +3,8 @@ import com.Bug_Tracker.enumeration.Role;
 
 import com.Bug_Tracker.Model.User;
 import com.Bug_Tracker.Model.UserPrincipal;
+import com.Bug_Tracker.exception.domain.EmailExistException;
+import com.Bug_Tracker.exception.domain.UsernameExistException;
 import com.Bug_Tracker.repository.UserRepository;
 import com.Bug_Tracker.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -41,8 +43,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void register(String firstName, String lastName, String username, String password, String email)  {
-
+    public User register(String firstName, String lastName, String username, String password, String email) throws UsernameExistException, EmailExistException {
+        validateNewUsernameAndEmail(username,email);
         User user = new User();
         user.setUserId(generateUserId());
         user.setFirstName(firstName);
@@ -54,8 +56,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setRole(Role.ROLE_USER.name());
         user.setAuthorities(Role.ROLE_USER.getAuthorities());
         userRepository.save(user); // saves user in mysql database
+        return user;
 
     }
+
+    private void validateNewUsernameAndEmail(String newUsername, String newEmail) throws UsernameExistException, EmailExistException {
+        User userByNewUsername = findUserByUsername(newUsername); // if you find it then it isnt null, which means the username is already in db, so if not null then throw excepeption
+        User userByNewEmail = findUserByEmail(newEmail);
+
+            if(userByNewUsername != null) {
+                throw new UsernameExistException("Username already exists");
+            }
+            if(userByNewEmail != null) {
+                throw new EmailExistException("Email already exists");
+            }
+
+        }
+
 
 
 
@@ -63,7 +80,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User findUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }
-
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -75,6 +95,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.deleteById(user.getId());
 
     }
+
 
 
 

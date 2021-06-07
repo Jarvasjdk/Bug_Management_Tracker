@@ -23,7 +23,7 @@ public class BugController
 
         @PostMapping("/addBug")
         @PreAuthorize("hasAnyAuthority('user:create')")
-        public void addNewBug(@RequestParam("bugDescription") String description,
+        public Bug addNewBug(@RequestParam("bugDescription") String description,
                                              @RequestParam("bugType") String bugType,
                                              @RequestParam("bugLocation") String bugLocation,
                                              @RequestParam("bugPriority") String priority,
@@ -32,14 +32,14 @@ public class BugController
                  {
 
 
-            bugService.addNewBug (description, bugType, bugLocation, priority, Boolean.parseBoolean(isActive));
+           return bugService.addNewBug (description, bugType, bugLocation, priority, Boolean.parseBoolean(isActive));
 
 
         }
 
         @PostMapping("/updateBug")
         @PreAuthorize("hasAnyAuthority('user:update')")
-        public void updateBug(@RequestParam("bugId") String bugId,
+        public Bug updateBug(@RequestParam("bugId") String bugId,
                                              @RequestParam("bugDescription") String bugDescription,
                                              @RequestParam("bugLocation") String bugLocation,
                                              @RequestParam("bugPriority") String bugPriority,
@@ -47,7 +47,8 @@ public class BugController
 
                                              @RequestParam("isActive") String isActive)
         {
-            bugService.updateBug(bugId,bugDescription,bugLocation,bugPriority, bugType, Boolean.parseBoolean(isActive));
+           return bugService.updateBug(bugId,bugDescription,bugLocation,bugPriority, bugType, Boolean.parseBoolean(isActive));
+
 
         }
 
@@ -61,7 +62,7 @@ public class BugController
     }
 
     @DeleteMapping("/delete/{bugId}")
-    // @PreAuthorize("hasAnyAuthority('user:delete')")
+    @PreAuthorize("hasAnyAuthority('user:delete')")
     public void deleteBug(@PathVariable("bugId") String id)  {
             bugService.deleteBug(id);
 

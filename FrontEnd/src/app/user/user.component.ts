@@ -6,6 +6,9 @@ import { NgForm } from '@angular/forms';
 import { UserAuthenticationService } from '../service/user-authentication.service';
 import { Router } from '@angular/router';
 import { Bug } from '../model/bug';
+import { NotificationService } from '../service/notification.service';
+import { NotificationType } from '../enum/notification-type.enum';
+
 
 @Component({
   selector: 'app-user',
@@ -23,7 +26,7 @@ export class UserComponent implements OnInit, OnDestroy {
   public currentBugId: string;
 
   constructor(private router: Router, private authenticationService: UserAuthenticationService,
-              private userService: UserService,) {}
+              private userService: UserService,private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.getBugs(); 
@@ -45,7 +48,6 @@ public selectChangeHandler(event: any){
     this.subscriptions.push(
       this.userService.getBugs().subscribe(
         (response: Bug[]) => {
-        //  this.userService.addBugsToLocalCache(response); 
           this.bugs = response;
           console.log(response);
          
@@ -73,18 +75,21 @@ public selectChangeHandler(event: any){
     console.log(formData);
     this.subscriptions.push(
       this.userService.addBug(formData).subscribe( 
-        (bug: Bug) => {
+        (response: Bug) => {
           
           this.clickButton('new-bug-close'); // this will auto close the window by using DOM to click corrosponding to id in it
           bugForm.reset(); // resets what we put in entries, since when we input data, when we close pop-up and reopen it we want the form to be empty
-          this.getBugs();
+          this.getBugs(); 
+          console.log(response);
+          this.notificationService.sendNotification(NotificationType.SUCCESS, `Bug with ID ${response.bugId} added.`);
+
         },
         
       )
       );
   }
   
-// created generic clickButton since there were alot calls to doc.getElementById
+// created generic clickButton 
   private clickButton(buttonId: string): void {
     document.getElementById(buttonId).click();
   }
@@ -100,7 +105,9 @@ public selectChangeHandler(event: any){
           console.log(response);
           this.clickButton('closeEditBugModalButton');
           this.getBugs();
-        
+
+          this.notificationService.sendNotification(NotificationType.SUCCESS, `Bug with ID ${response.bugId} updated.`);
+
         }
         
       )
@@ -109,9 +116,9 @@ public selectChangeHandler(event: any){
   
   public onDeleteBug(bugId: string): void {
    
-        this.userService.deleteBug(bugId);
-        this.getBugs();
-    }
+    this.userService.deleteBug(bugId);
+    this.getBugs();
+}
 
   public onEditBug(editBug: Bug): void {
     console.log(editBug);

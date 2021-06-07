@@ -24,8 +24,8 @@ export class UserService {
 
   
   
-  public deleteBug(bugId: string): void {
-     this.http.delete(`${this.host}/bug/delete/${bugId}`).subscribe();
+  public deleteBug(bugId: string): Observable<any> {
+     return this.http.delete(`${this.host}/bug/delete/${bugId}`);
   }
   
    

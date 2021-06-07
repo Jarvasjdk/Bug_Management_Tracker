@@ -10,9 +10,9 @@ public interface BugService {
 
     Bug findBugByBugId(String id);
 
-    void addNewBug(String description,String bugType,String bugLocation,String priority, boolean isActive) ;
+    Bug addNewBug(String description,String bugType,String bugLocation,String priority, boolean isActive) ;
 
-    void updateBug(String bugId,String bugDescription,String bugLocation, String bugPriority, String bugType, boolean newIsActive);
+    Bug updateBug(String bugId,String bugDescription,String bugLocation, String bugPriority, String bugType, boolean newIsActive);
 
     void deleteBug(String id);
 

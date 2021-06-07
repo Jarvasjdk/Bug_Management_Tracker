@@ -1,0 +1,57 @@
+package com.Bug_Tracker.exception;
+
+import com.Bug_Tracker.Model.HttpResponse;
+import com.Bug_Tracker.exception.domain.EmailExistException;
+import com.Bug_Tracker.exception.domain.UsernameExistException;
+import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.persistence.NoResultException;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+@RestControllerAdvice
+public class ExceptionHandling implements ErrorController {
+
+
+    @ExceptionHandler(EmailExistException.class) // the reason exception can access getMessage is because it extends Exception class, so it gets all the public methods with that
+    public ResponseEntity<HttpResponse> emailExistException(EmailExistException exception) {
+        return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(UsernameExistException.class)
+    public ResponseEntity<HttpResponse> usernameExistException(UsernameExistException exception) {
+        return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+    // reason i say password could be incorrect is so that client wont know which it is in case of unauthorized intrusion
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<HttpResponse> badCredentialsException() {
+        return createHttpResponse(BAD_REQUEST, "Username / password incorrect. Please try again");
+    }
+    private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus,
+                httpStatus.getReasonPhrase().toUpperCase(), message), httpStatus);
+    }
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<HttpResponse> userNotFoundException(UsernameNotFoundException exception) {
+        return createHttpResponse(NOT_FOUND, exception.getMessage());
+    }
+    @ExceptionHandler(NoResultException.class)
+    public ResponseEntity<HttpResponse> notFoundException(NoResultException exception) {
+        return createHttpResponse(NOT_FOUND, exception.getMessage());
+    }
+    @Override
+    public String getErrorPath() {
+        return null;
+    }
+}

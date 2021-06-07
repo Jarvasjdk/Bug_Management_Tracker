@@ -9,14 +9,18 @@ import com.Bug_Tracker.utility.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(path ={"/","adminPortal"})
@@ -56,17 +60,19 @@ public class AdminController {
 
 
     @PostMapping("/login")
-    public HttpHeaders login(@RequestBody Admin adminUser) {
+    public ResponseEntity<Admin> login(@RequestBody Admin adminUser) throws UsernameNotFoundException {
         authenticate(adminUser.getUsername(),adminUser.getPassword()); // success for kp 123
         Admin loginAdmin = adminRepository.findAdminByUsername(adminUser.getUsername());
+      //  if(loginAdmin == null) throw new UserNotFoundException("User not found");
         AdminPrinciple adminPrincipal = new AdminPrinciple(loginAdmin);
-
-        return getJWTHeader(adminPrincipal); // returns token
+        HttpHeaders headers = getJWTHeader(adminPrincipal);
+        return new ResponseEntity<>(loginAdmin, headers, OK);
+       // return getJWTHeader(adminPrincipal); // returns token
 
 
     }
     // this gives us token
-    private HttpHeaders getJWTHeader(AdminPrinciple admin) {
+    private HttpHeaders getJWTHeader(AdminPrinciple admin)  {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Jwt-Token",jwtTokenProvider.generateAdminJwtToken(admin));
 

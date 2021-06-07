@@ -2,17 +2,26 @@ package com.Bug_Tracker.Controller;
 
 
 
+import com.Bug_Tracker.Model.Admin;
 import com.Bug_Tracker.Model.User;
 import com.Bug_Tracker.Model.UserPrincipal;
+import com.Bug_Tracker.exception.domain.EmailExistException;
+import com.Bug_Tracker.exception.domain.UsernameExistException;
 import com.Bug_Tracker.service.UserService;
 import com.Bug_Tracker.utility.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
+
+import static org.springframework.http.HttpStatus.OK;
 
 
 @RestController
@@ -28,18 +37,23 @@ public class UserController {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
     }
+   /* @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException {
+        User newUser = userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail());
+        return new ResponseEntity<>(newUser, OK);*/
 
     @PostMapping("/register")
-    public void register(@RequestBody User user)  {
-        userService.register(user.getFirstName(),user.getLastName(),user.getUsername(),user.getPassword(), user.getEmail());
+    public ResponseEntity<User> register(@RequestBody User user) throws UsernameExistException, EmailExistException {
+        User newUser =  userService.register(user.getFirstName(),user.getLastName(),user.getUsername(),user.getPassword(), user.getEmail());
+            return new ResponseEntity<>(newUser, OK);
     }
     @PostMapping("/login")
-    public HttpHeaders login(@RequestBody User user) {
+    public ResponseEntity<User> login(@RequestBody User user) throws UsernameNotFoundException {
         authenticate(user.getUsername(),user.getPassword());
         User loginUser = userService.findUserByUsername(user.getUsername());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
-
-        return getJWTHeader(userPrincipal);
+        HttpHeaders headers = getJWTHeader(userPrincipal);
+        return new ResponseEntity<>(loginUser, headers, OK);
     }
 
     private HttpHeaders getJWTHeader(UserPrincipal user) {
