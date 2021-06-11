@@ -53,8 +53,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setEmail(email);
         user.setPassword(encodePassword(password));
         user.setActive(true);
-        user.setRole(Role.ROLE_USER.name());
-        user.setAuthorities(Role.ROLE_USER.getAuthorities());
+        user.setRole(Role.ROLE_MANAGER.name());
+        user.setAuthorities(Role.ROLE_MANAGER.getAuthorities());
         userRepository.save(user); // saves user in mysql database
         return user;
 
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
 
-
+// whenever you authenticate the user or call the authenticate method, this will automatically be called to load the user by username
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByUsername(username);

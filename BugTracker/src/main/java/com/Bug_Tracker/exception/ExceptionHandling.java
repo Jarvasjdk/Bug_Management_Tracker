@@ -6,6 +6,7 @@ import com.Bug_Tracker.exception.domain.UsernameExistException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,8 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.NoResultException;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class ExceptionHandling implements ErrorController {
@@ -38,14 +38,18 @@ public class ExceptionHandling implements ErrorController {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus,
                 httpStatus.getReasonPhrase().toUpperCase(), message), httpStatus);
     }
-    @ExceptionHandler(UserNotFoundException.class)
+   /* @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<HttpResponse> userNotFoundException(UsernameNotFoundException exception) {
         return createHttpResponse(NOT_FOUND, exception.getMessage());
-    }
+    }*/
+   @ExceptionHandler(AccessDeniedException.class)
+   public ResponseEntity<HttpResponse> accessDeniedException() {
+       return createHttpResponse(FORBIDDEN, "NOT_ENOUGH_PERMISSION");
+   }
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<HttpResponse> notFoundException(NoResultException exception) {
         return createHttpResponse(NOT_FOUND, exception.getMessage());

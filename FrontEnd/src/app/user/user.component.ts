@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Bug } from '../model/bug';
 import { NotificationService } from '../service/notification.service';
 import { NotificationType } from '../enum/notification-type.enum';
+import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
 
 
 @Component({
@@ -51,7 +52,7 @@ public selectChangeHandler(event: any){
           this.bugs = response;
           console.log(response);
          
-        },
+        }
         
       )
     );
@@ -84,7 +85,9 @@ public selectChangeHandler(event: any){
           this.notificationService.sendNotification(NotificationType.SUCCESS, `Bug with ID ${response.bugId} added.`);
 
         },
-        
+        (error: HttpErrorResponse) => {
+          this.notificationService.sendNotification(NotificationType.ERROR, error.error.message);
+        }
       )
       );
   }
@@ -108,6 +111,9 @@ public selectChangeHandler(event: any){
 
           this.notificationService.sendNotification(NotificationType.SUCCESS, `Bug with ID ${response.bugId} updated.`);
 
+        },
+        (error: HttpErrorResponse) => {
+          this.notificationService.sendNotification(NotificationType.ERROR, error.error.message);
         }
         
       )
@@ -116,8 +122,19 @@ public selectChangeHandler(event: any){
   
   public onDeleteBug(bugId: string): void {
    
-    this.userService.deleteBug(bugId);
-    this.getBugs();
+    this.subscriptions.push(this.userService.deleteBug(bugId).subscribe(
+      (response: String) => {
+          console.log(response);
+          this.getBugs();
+          this.notificationService.sendNotification(NotificationType.SUCCESS, `Bug with ID ${response} deleted.`);
+      },
+      (error: HttpErrorResponse) => {
+        this.notificationService.sendNotification(NotificationType.ERROR, error.error.message);
+      }
+    )
+    );
+    
+   // this.getBugs(); // reason im not getting bugs i think is cuz it needs a response or to wait for reposne then get bugs
 }
 
   public onEditBug(editBug: Bug): void {

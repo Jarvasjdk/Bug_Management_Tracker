@@ -168,9 +168,11 @@
                 </select>
                   <div class="form-check">
                     <label class="form-check-label">
-                      <input name="isActive" type="checkbox" required [(ngModel)]="editBug.isActive" class="form-check-input">
+                      <input name="isActive" type="checkbox" required [(ngModel)]="editBug.isActive" class="form-check-input" *ngIf="isActive">
                       Active
                     </label>
+                    
+
                   </div>
 
               </form>

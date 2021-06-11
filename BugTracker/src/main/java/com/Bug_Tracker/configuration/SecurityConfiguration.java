@@ -3,7 +3,8 @@ package com.Bug_Tracker.configuration;
 //  import com.Bug_Tracker.filter.JWTAccessDeniedHandler;
      //   import com.Bug_Tracker.filter.JWTAuthenticationEntryPoint;
        import com.Bug_Tracker.filter.JWTAuthorizationFilter;
-        import org.springframework.beans.factory.annotation.Autowired;
+       import com.Bug_Tracker.filter.JwtAccessDeniedHandler;
+       import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.beans.factory.annotation.Qualifier;
         import org.springframework.context.annotation.Bean;
         import org.springframework.context.annotation.Configuration;
@@ -27,18 +28,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     private JWTAuthorizationFilter JWTAuthorizationFilter;
-
+    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private UserDetailsService userDetailsService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     public SecurityConfiguration(JWTAuthorizationFilter jwtAuthorizationFilter,
 
                                  @Qualifier("UserDetailService") UserDetailsService userDetailsService
-            ,BCryptPasswordEncoder bCryptPasswordEncoder) {
+            ,BCryptPasswordEncoder bCryptPasswordEncoder,JwtAccessDeniedHandler jwtAccessDeniedHandler) {
         JWTAuthorizationFilter = jwtAuthorizationFilter;
 
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
 
     }
 
@@ -55,6 +57,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and().authorizeRequests().antMatchers("/user/register","/user/login","/adminPortal/login").permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                 .addFilterBefore(JWTAuthorizationFilter, UsernamePasswordAuthenticationFilter.class); // this filter happens before all other filters
     }

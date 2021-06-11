@@ -2,6 +2,7 @@ package com.Bug_Tracker.Controller;
 import com.Bug_Tracker.Model.Bug;
 import com.Bug_Tracker.service.BugService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,8 +64,8 @@ public class BugController
 
     @DeleteMapping("/delete/{bugId}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
-    public void deleteBug(@PathVariable("bugId") String id)  {
-            bugService.deleteBug(id);
+    public String deleteBug(@PathVariable("bugId") String id) throws AccessDeniedException {
+         return bugService.deleteBug(id);
 
     }
 

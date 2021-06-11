@@ -69,9 +69,10 @@ public class BugServiceImpl implements BugService {
 
 
     @Override
-    public void deleteBug(String id) {
+    public String deleteBug(String id) {
         Bug bug = bugRepository.findBugByBugId(id);
         bugRepository.deleteById(bug.getId());
+        return id;
 
     }
 
