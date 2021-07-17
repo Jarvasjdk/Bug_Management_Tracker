@@ -1,7 +1,6 @@
 package com.Bug_Tracker.configuration;
 
-//  import com.Bug_Tracker.filter.JWTAccessDeniedHandler;
-     //   import com.Bug_Tracker.filter.JWTAuthenticationEntryPoint;
+
        import com.Bug_Tracker.filter.JWTAuthorizationFilter;
        import com.Bug_Tracker.filter.JwtAccessDeniedHandler;
        import org.springframework.beans.factory.annotation.Autowired;

@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,7 +19,7 @@ import static org.springframework.http.HttpStatus.*;
 public class ExceptionHandling implements ErrorController {
 
 
-    @ExceptionHandler(EmailExistException.class) // the reason exception can access getMessage is because it extends Exception class, so it gets all the public methods with that
+    @ExceptionHandler(EmailExistException.class)
     public ResponseEntity<HttpResponse> emailExistException(EmailExistException exception) {
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
@@ -38,14 +37,7 @@ public class ExceptionHandling implements ErrorController {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus,
                 httpStatus.getReasonPhrase().toUpperCase(), message), httpStatus);
     }
-   /* @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException exception) {
-        return createHttpResponse(BAD_REQUEST, exception.getMessage());
-    }
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<HttpResponse> userNotFoundException(UsernameNotFoundException exception) {
-        return createHttpResponse(NOT_FOUND, exception.getMessage());
-    }*/
+
    @ExceptionHandler(AccessDeniedException.class)
    public ResponseEntity<HttpResponse> accessDeniedException() {
        return createHttpResponse(FORBIDDEN, "NOT_ENOUGH_PERMISSION");

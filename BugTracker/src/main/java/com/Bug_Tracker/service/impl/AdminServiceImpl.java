@@ -2,7 +2,6 @@ package com.Bug_Tracker.service.impl;
 
 import com.Bug_Tracker.Model.Admin;
 import com.Bug_Tracker.Model.AdminPrinciple;
-import com.Bug_Tracker.Model.User;
 import com.Bug_Tracker.enumeration.Role;
 import com.Bug_Tracker.repository.AdminRepository;
 import com.Bug_Tracker.repository.UserRepository;
@@ -15,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
 
 
 @Service
@@ -47,8 +44,6 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         adminRepository.save(user); // saves user in mysql database
 
     }
-
-
 
 
     private String encodePassword(String password) {

@@ -3,7 +3,6 @@ package com.Bug_Tracker.service;
 import com.Bug_Tracker.Model.Bug;
 import org.springframework.security.access.AccessDeniedException;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface BugService {

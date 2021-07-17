@@ -1,38 +1,64 @@
 package com.Bug_Tracker.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userId;
-    private String firstName;
-    private String lastName;
+    private String user_id; // this is not same as joincolumn user_id, user_id from join is referring to my long id
+    private String first_name;
+    private String last_name;
     private String username;
     private String password;
     private String email;
     private String role;
     private String[] authorities;
-    private boolean isActive;
+    private boolean is_active;
+
+
+  @JsonIgnore
+  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinTable(name = "user_projects",
+          joinColumns = { @JoinColumn(name = "user_id")}, // both these keys are foreign keys
+          inverseJoinColumns = { @JoinColumn (name = "project_id")})
+        private Set<Project> project = new HashSet<>();
+
+    public User setProject(Set<Project> project){
+        this.project = project;
+        return this;
+    }
 
     public User(){}
 
-    public User(Long id, String userId, String firstName, String lastName, String username, String password, String email,  String role, String[] authorities, boolean isActive) {
+    public User(Long id, String user_id, String first_name, String last_name, String username, String password, String email,  String role, String[] authorities, boolean is_active, Set<Project> project,Project projects) {
         this.id = id;
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.user_id = user_id;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.username = username;
         this.password = password;
         this.email = email;
 
         this.role = role;
         this.authorities = authorities;
-        this.isActive = isActive;
+        this.is_active = is_active;
+        this.project= project;
+
     }
+
+
+
+    public Set<Project> getProject() {
+        return project;
+    }
+
+
 
 
 
@@ -45,27 +71,27 @@ public class User {
     }
 
     public String getUserId() {
-        return userId;
+        return user_id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserId(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getFirstName() {
-        return firstName;
+        return first_name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstName(String first_name) {
+        this.first_name = first_name;
     }
 
     public String getLastName() {
-        return lastName;
+        return last_name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastName(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getUsername() {
@@ -109,11 +135,11 @@ public class User {
     }
 
     public boolean isActive() {
-        return isActive;
+        return is_active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        is_active = active;
     }
 
 }

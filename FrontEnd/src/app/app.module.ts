@@ -16,6 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminAuthInterceptor } from './interceptor/auth.admin-interceptor';
 import { NotificationModule } from './notification.module';
 import { NotificationService } from './service/notification.service';
+import { ProjectComponent } from './project/project.component';
+import { ProjectService } from './service/project.service';
 
 
 @NgModule({
@@ -25,7 +27,8 @@ import { NotificationService } from './service/notification.service';
     RegisterComponent,
     UserComponent,
     AdminComponent,
-    AdminLoginComponent
+    AdminLoginComponent,
+    ProjectComponent
   ],
   imports: [
     BrowserModule,
@@ -33,10 +36,11 @@ import { NotificationService } from './service/notification.service';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NotificationModule
+    NotificationModule,
+    
     
   ],
-  providers: [ NotificationService, UserAuthenticationService,AdminAuthenticationService, UserService,
+  providers: [ NotificationService, UserAuthenticationService,AdminAuthenticationService, UserService, ProjectService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   {provide: HTTP_INTERCEPTORS, useClass: AdminAuthInterceptor, multi: true} ],
   bootstrap: [AppComponent]

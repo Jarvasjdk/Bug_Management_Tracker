@@ -1,7 +1,6 @@
 package com.Bug_Tracker.Model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,7 +31,6 @@ public Bug(){}
         this.bugType = bugType;
 
     }
-
 
 
     public Long getId() {

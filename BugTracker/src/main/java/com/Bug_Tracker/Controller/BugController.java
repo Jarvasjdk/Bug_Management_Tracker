@@ -1,5 +1,8 @@
 package com.Bug_Tracker.Controller;
 import com.Bug_Tracker.Model.Bug;
+import com.Bug_Tracker.Model.User;
+import com.Bug_Tracker.repository.BugRepository;
+import com.Bug_Tracker.repository.UserRepository;
 import com.Bug_Tracker.service.BugService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -7,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Date;
 import java.util.List;
 @RestController
 @RequestMapping(path = {"/" ,"/bug"})
@@ -20,6 +24,7 @@ public class BugController
         public BugController(BugService bugService) {
             this.bugService = bugService;
 
+
         }
 
         @PostMapping("/addBug")
@@ -29,6 +34,7 @@ public class BugController
                                              @RequestParam("bugLocation") String bugLocation,
                                              @RequestParam("bugPriority") String priority,
                                              @RequestParam("isActive") String isActive
+
                                                 )
                  {
 
@@ -49,7 +55,6 @@ public class BugController
                                              @RequestParam("isActive") String isActive)
         {
            return bugService.updateBug(bugId,bugDescription,bugLocation,bugPriority, bugType, Boolean.parseBoolean(isActive));
-
 
         }
 

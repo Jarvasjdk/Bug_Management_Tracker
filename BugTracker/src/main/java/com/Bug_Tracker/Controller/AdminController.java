@@ -94,6 +94,14 @@ public class AdminController {
         userService.deleteUser(username);
 
     }
+    @PostMapping("/updateUserRole")
+  //  @PreAuthorize("hasAnyAuthority('user:update')")
+    public String updateUserRole(@RequestParam("role") String role,
+                                 @RequestParam("username") String username)
+    {
+        return userService.updateUserRole(role,username);
+
+    }
 
 
 

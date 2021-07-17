@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 @Transactional
 @Service
@@ -25,11 +27,12 @@ public class BugServiceImpl implements BugService {
         this.bugRepository = bugRepository;
     }
 
+
     @Override
     public List<Bug> getBugs() {
-        return bugRepository.findAll();
-    }
+       return bugRepository.findAll();
 
+    }
 
 
     @Override

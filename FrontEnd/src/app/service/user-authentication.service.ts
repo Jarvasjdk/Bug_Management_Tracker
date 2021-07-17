@@ -3,6 +3,8 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
+import { Project } from '../model/project';
+
 
 
 @Injectable({providedIn: 'root'})
@@ -46,7 +48,19 @@ export class UserAuthenticationService {
   public getToken(): string {
     return this.token;
   }
+  public addUserToLocalCache(user: User): void {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+public getUserFromLocalCache(): User {
+    return JSON.parse(localStorage.getItem('user')); 
+  }
 
+  public addProjectToLocalCache(project: string): void {
+    localStorage.setItem('proj', JSON.stringify(project));
+  }
+public getProjectFromLocalCache(): string {
+    return JSON.parse(localStorage.getItem('proj')); 
+  }
  
 
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { User } from '../model/user';
 import { UserService } from '../service/user.service';
 import { NgForm } from '@angular/forms';
@@ -9,6 +9,8 @@ import { Bug } from '../model/bug';
 import { NotificationService } from '../service/notification.service';
 import { NotificationType } from '../enum/notification-type.enum';
 import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
+import { Project } from '../model/project';
+import { ProjectService } from '../service/project.service';
 
 
 @Component({
@@ -17,20 +19,50 @@ import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/htt
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit, OnDestroy {
- 
   public bug: Bug;
+  public gi: string;
   public selectedBugType: string = '';
   private subscriptions: Subscription[] = [];
   public editUser = new User();
   public bugs: Bug[];
   public editBug = new Bug();
   public currentBugId: string;
+  public currentProjectName: string = '';
+  public formD: FormData;
 
-  constructor(private router: Router, private authenticationService: UserAuthenticationService,
+  constructor(private projectService: ProjectService,private router: Router, private authenticationService: UserAuthenticationService,
               private userService: UserService,private notificationService: NotificationService) {}
 
+             
   ngOnInit(): void {
-    this.getBugs(); 
+  this.currentProjectName =this.authenticationService.getProjectFromLocalCache();
+    const formD = this.projectService.listProjectBugsForm(this.currentProjectName);
+  
+    this.subscriptions.push(
+      this.projectService.listProjectBugs(formD).subscribe(
+        (response: Bug[]) => {
+          this.bugs = response;
+          console.log(response);
+         
+        }
+        
+      )
+    );
+  
+  }
+  public listProjectBugs(projectNameObject: FormData): void {
+    this.formD = projectNameObject;
+ 
+    this.subscriptions.push(
+          this.userService.listProjectBugs(projectNameObject).subscribe(
+            (response: Bug[]) => {
+              this.bugs = response;
+              console.log(response);
+             
+            }
+            
+          )
+        );
   }
 public selectChangeHandler(event: any){
 
@@ -97,8 +129,6 @@ public selectChangeHandler(event: any){
     document.getElementById(buttonId).click();
   }
 
-  
-
   public onUpdateBug(): void {
     const formData = this.userService.updateBugFormDate(this.editBug,this.currentBugId,this.selectedBugType);
     console.log(formData);
@@ -134,7 +164,6 @@ public selectChangeHandler(event: any){
     )
     );
     
-   // this.getBugs(); // reason im not getting bugs i think is cuz it needs a response or to wait for reposne then get bugs
 }
 
   public onEditBug(editBug: Bug): void {
@@ -143,6 +172,14 @@ public selectChangeHandler(event: any){
     this.currentBugId = editBug.bugId;
     this.clickButton('openBugEdit');
   }
+  private getUserRole(): string {
+    return this.authenticationService.getUserFromLocalCache().role;
+     
+  }
+ public get isManager(): boolean {
+    return this.getUserRole() === 'ROLE_MANAGER';
+  }
+
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());

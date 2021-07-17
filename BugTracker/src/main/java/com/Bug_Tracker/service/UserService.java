@@ -8,12 +8,11 @@ import java.util.List;
 
 public interface UserService {
     User register(String firstName, String lastName, String username, String password, String email) throws UsernameExistException, EmailExistException;
-
-
     User findUserByUsername(String username);
     List<User> getUsers();
     void deleteUser(String id);
    User findUserByEmail(String email);
+   String updateUserRole(String role,String username);
 
 
 }

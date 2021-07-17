@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserComponent } from './user/user.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
+import { ProjectComponent } from './project/project.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -12,6 +13,7 @@ const routes: Routes = [
   {path: 'user', component: UserComponent},
   {path: 'adminPortal', component: AdminLoginComponent},
   {path: 'adminPage', component: AdminComponent},
+  {path: 'project', component: ProjectComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'}
 ];
 

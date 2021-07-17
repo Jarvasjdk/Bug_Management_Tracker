@@ -1,4 +1,5 @@
 package com.Bug_Tracker.service.impl;
+import com.Bug_Tracker.Model.Project;
 import com.Bug_Tracker.enumeration.Role;
 
 import com.Bug_Tracker.Model.User;
@@ -6,6 +7,7 @@ import com.Bug_Tracker.Model.UserPrincipal;
 import com.Bug_Tracker.exception.domain.EmailExistException;
 import com.Bug_Tracker.exception.domain.UsernameExistException;
 import com.Bug_Tracker.repository.UserRepository;
+import com.Bug_Tracker.service.ProjectService;
 import com.Bug_Tracker.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -84,6 +86,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
+
+    @Override
+    public String updateUserRole(String role,String username) {
+
+        User user = userRepository.findUserByUsername(username);
+        if(role.equals("ROLE_MANAGER")){
+            user.setRole(Role.ROLE_MANAGER.name());
+        }
+        else if (role.equals("ROLE_ADMIN"))
+            user.setRole(Role.ROLE_ADMIN.name());
+        else
+            user.setRole(Role.ROLE_USER.name());
+               return role;
+    }
+
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -95,7 +112,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.deleteById(user.getId());
 
     }
-
 
 
 // whenever you authenticate the user or call the authenticate method, this will automatically be called to load the user by username
@@ -111,4 +127,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
     }
+
+
 }

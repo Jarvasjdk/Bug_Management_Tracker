@@ -32,7 +32,9 @@ export class LoginComponent implements OnInit {
         (response: HttpResponse<User>) => { 
           const token = response.headers.get("Jwt-Token");
           this.userAuthenticationService.saveToken(token); 
-          this.router.navigateByUrl('/user'); 
+          this.userAuthenticationService.addUserToLocalCache(response.body);
+
+          this.router.navigateByUrl('/project'); 
         },
         (errorResponse: HttpErrorResponse) => {
           this.notificationService.sendNotification(NotificationType.ERROR, errorResponse.error.message);

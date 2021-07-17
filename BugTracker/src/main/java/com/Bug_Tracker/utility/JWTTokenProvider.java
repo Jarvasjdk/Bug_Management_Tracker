@@ -1,6 +1,5 @@
 package com.Bug_Tracker.utility;
 
-//import com.Bug_Tracker.Model.AdminPrinciple;
 import com.Bug_Tracker.Model.AdminPrinciple;
 import com.Bug_Tracker.Model.UserPrincipal;
 import com.auth0.jwt.JWT;
@@ -64,7 +63,7 @@ public class JWTTokenProvider {
 
     public String getSubject(String token) {
         JWTVerifier verifier = getJWTVerifier();
-        return verifier.verify(token).getSubject(); // this is where its throwing exception
+        return verifier.verify(token).getSubject();
     }
 
     private boolean isTokenExpired(JWTVerifier verifier, String token) {
