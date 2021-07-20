@@ -1,7 +1,10 @@
 package com.Bug_Tracker.Controller;
 import com.Bug_Tracker.Model.Bug;
+import com.Bug_Tracker.Model.Project;
 import com.Bug_Tracker.Model.User;
+import com.Bug_Tracker.dto.BugDTO;
 import com.Bug_Tracker.repository.BugRepository;
+import com.Bug_Tracker.repository.ProjectRepository;
 import com.Bug_Tracker.repository.UserRepository;
 import com.Bug_Tracker.service.BugService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,40 +21,58 @@ import java.util.List;
 public class BugController
 {
         private BugService bugService;
+    private ProjectRepository projectRepository;
+    private BugRepository bugRepository;
 
         
         @Autowired
-        public BugController(BugService bugService) {
+        public BugController(BugService bugService, ProjectRepository projectRepository, BugRepository bugRepository) {
             this.bugService = bugService;
+            this.projectRepository = projectRepository;
+            this.bugRepository = bugRepository;
 
 
         }
+        @PostMapping("/listProjectBugs")
+        public List<BugDTO> listProjectBugs(@RequestParam("projectName") String projectName){
+        return bugService.listProjectBugs(projectName);
+    }
+
 
         @PostMapping("/addBug")
-        @PreAuthorize("hasAnyAuthority('user:create')")
-        public Bug addNewBug(@RequestParam("bugDescription") String description,
-                                             @RequestParam("bugType") String bugType,
-                                             @RequestParam("bugLocation") String bugLocation,
-                                             @RequestParam("bugPriority") String priority,
-                                             @RequestParam("isActive") String isActive
+      //  @PreAuthorize("hasAnyAuthority('user:create')")
+        public List<BugDTO> addNewBug(@RequestParam("bugDescription") String description,
+                                      @RequestParam("bugType") String bugType,
+                                      @RequestParam("bugLocation") String bugLocation,
+                                      @RequestParam("bugPriority") String priority,
+                                      @RequestParam("isActive") String isActive,
+                                      @RequestParam("projectName") String projectName
 
                                                 )
                  {
 
 
-           return bugService.addNewBug (description, bugType, bugLocation, priority, Boolean.parseBoolean(isActive));
+           return bugService.addNewBug (description, bugType, bugLocation, priority, Boolean.parseBoolean(isActive), projectName);
 
+                 //    assignProjectToBug(projectName,bug.getBugId());, Bug bug = bugservice etc
+                     // return bug
 
         }
-
+    public void assignProjectToBug(String projectName, String bugId) {
+        Project p = projectRepository.findProjectByProjectName(projectName);
+        Bug b = bugRepository.findBugByBugId(bugId);
+        p.getBugs().add(b);
+        System.out.println(p);
+        //return p;
+    }
+//
         @PostMapping("/updateBug")
-        @PreAuthorize("hasAnyAuthority('user:update')")
+      //  @PreAuthorize("hasAnyAuthority('user:update')")
         public Bug updateBug(@RequestParam("bugId") String bugId,
                                              @RequestParam("bugDescription") String bugDescription,
                                              @RequestParam("bugLocation") String bugLocation,
                                              @RequestParam("bugPriority") String bugPriority,
                                              @RequestParam("bugType") String bugType,
-
                                              @RequestParam("isActive") String isActive)
         {
            return bugService.updateBug(bugId,bugDescription,bugLocation,bugPriority, bugType, Boolean.parseBoolean(isActive));
@@ -68,7 +89,7 @@ public class BugController
     }
 
     @DeleteMapping("/delete/{bugId}")
-    @PreAuthorize("hasAnyAuthority('user:delete')")
+  //  @PreAuthorize("hasAnyAuthority('user:delete')")
     public String deleteBug(@PathVariable("bugId") String id) throws AccessDeniedException {
          return bugService.deleteBug(id);
 

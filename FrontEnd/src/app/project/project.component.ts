@@ -23,7 +23,6 @@ export class ProjectComponent implements OnInit {
   constructor(private userAuthenticationService: UserAuthenticationService,private router: Router, private authenticationService: UserAuthenticationService, private projectService: ProjectService, private notificationService:  NotificationService,private userService: UserService
     
 ) {}
-public g:Project;
   public project: Project;
   public selectedProjectType: string = '';
   private subscriptions: Subscription[] = []; 
@@ -35,8 +34,22 @@ public g:Project;
 
   
   ngOnInit(): void {
-    this.getProjects(); 
+    if(this.getUserRole() === 'ROLE_MANAGER'){
+      this.getProjects();
+    }
+    else
+    this.getProjectsAssignedToUser(); 
   }
+  public getProjects(): void {
+this.subscriptions.push(
+  this.projectService.getProjects().subscribe(
+    (response: Project[]) => {
+        this.projects = response;
+    }
+  )
+);
+  }
+ 
 public selectChangeHandler(event: any){
 
   this.selectedProjectType = event.target.value;
@@ -46,6 +59,8 @@ public selectChangeHandler(event: any){
 
   public onLogOut(): void {
     this.authenticationService.logOut();
+   
+    localStorage.removeItem('proj');
     this.router.navigate(['/login']);
   }
   private getUserRole(): string {
@@ -65,17 +80,13 @@ public ManageUsers():void{
 
 }
 // get projects assigned to user
-  public getProjects(): void {
+  public getProjectsAssignedToUser(): void {
     this.currentUsername = this.authenticationService.getUserFromLocalCache().username; // returns a string
     
     const formData =this.projectService.listProjectByUserName(this.currentUsername); 
-    console.log(formData);
-    formData.forEach((value, key) => {                                                                                                                             
-      console.log("key (%s): value (%s)", key, value);                                                                                                           
-   })
 
     this.subscriptions.push(
-      this.projectService.getProjects(formData).subscribe(
+      this.projectService.getProjectsAssignedToUser(formData).subscribe(
         (response: Project[]) => {
           this.projects = response;
           console.log(response);
@@ -86,24 +97,30 @@ public ManageUsers():void{
     );
 
   }
-  
-  public listp(project:string): void {
+  // list bugs
+  public navToBug(project:string): void {
+    localStorage.removeItem('proj');
     this.userAuthenticationService.addProjectToLocalCache(project);
     this.t = this.userAuthenticationService.getProjectFromLocalCache();
-    this.router.navigate(['/user']);
+    this.router.navigate(['/bug']);
 
  }
+ public navToManager(project:string): void {
+  this.userAuthenticationService.addProjectToLocalCache(project);
+  this.t = this.userAuthenticationService.getProjectFromLocalCache();
+  this.router.navigate(['/user']);
+
+}
 
 public listProjectBugs(projectName: Project): void {
   
   console.log(projectName);
   localStorage.setItem('projectName',JSON.stringify(projectName));
-  this.router.navigate(['/user']);
+  this.router.navigate(['/bug']);
 
   
   }
   
-
   public stylefunc(str: string){
     var nstr = str.toLowerCase();
     if(nstr === 'high') return 1;

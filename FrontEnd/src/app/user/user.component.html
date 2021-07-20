@@ -3,190 +3,101 @@
     <div class="col-md-4">
     </div>
     <div class="col-md-4">
-      <h3>Bug Management Portal</h3>
+      <h5>Manager Users</h5>
       
     </div>
     <div class="col-md-4">
     </div>
   </div>
 
+  <!-- nav bar -->
+  <nav class="navbar navbar-expand-md breadcrumb">
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <div class="nav nav-pills">
+        
+        <h3>
+          Welcome
+        </h3>
+         
+      </div>
+    </div>
+  </nav>
+
   <button (click)="onLogOut()"  class="btn btn-info">
     <span >Logout</span>  
   </button>
-
   <div class="tab-content mt-3" id="myTabContent">
-    <!-- Bug table -->
-    <div class="tab-pane fade show active" id="bugs">
-      <div class="mb-3 float-right">
-        <div class="btn-group mr-2">
-
-          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addBugModal">
-            <i class="fa fa-plus"></i>New Bug
-          </button>
-        </div>
-      </div>
+    <!-- user table -->
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addUserModal">
+      <i class="fa fa-plus">Assign User To {{currentProjectN}}</i>
+    </button>
+    <div class="tab-pane fade show active" >
+     
       <table class="table table-hover">
+        
         <thead class="table-borderless">
           <tr class="text-center">
-
-            <th>Bug ID</th>
-            <th>Bug Description</th>
-            <th>Bug Location</th>
-            <th>Bug Priority</th>
-            <th>Bug Type</th>
-            <th>Status</th>
-            <th>Actions</th>
-
+           
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+           
           </tr>
         </thead>
-        <tbody *ngFor="let appBug of bugs">
+        <tbody *ngFor="let appUser of projectUsers">
           <tr class="text-center">
-
-            <td>{{appBug?.bugId}}</td>
-            <td>{{appBug?.bugDescription}}</td>
-            <td>{{appBug?.bugLocation}}</td>
-            <td> 
-              <span *ngIf='stylefunc(appBug?.bugPriority) == 1' class="badge badge-danger" >{{appBug?.bugPriority}}</span>
-              <span *ngIf='stylefunc(appBug?.bugPriority) == 2' class="badge badge-warning" >{{appBug?.bugPriority}}</span>
-              <span *ngIf='stylefunc(appBug?.bugPriority) == 3' class="badge badge-light" >{{appBug?.bugPriority}}</span>
-            </td>
-            <td>{{appBug?.bugType}}</td>
             
-            <td>
-              <span *ngIf="appBug?.isActive" class="badge badge-success">Active</span>
-              <span *ngIf="!appBug?.isActive" class="badge badge-danger">Inactive</span>
-            </td>
-
-            <td>
-              <div class="btn-group">
-                <button class="btn btn-outline-info" (click)="onEditBug(appBug)"><i class="fas fa-edit"></i></button>
-                <button [disabled]="!isManager" type="button" class="btn btn-outline-danger" (click)="onDeleteBug(appBug?.bugId)"><i
-                    class="fas fa-trash"></i></button>
-              </div>
-
-            </td>
+            <td >{{appUser?.firstName}}</td>
+            <td >{{appUser?.lastName}}</td>
+            <td >{{appUser?.username}}</td>
+            <td >{{appUser?.email}}</td>
+            <td >{{appUser?.role}}</td>
+            
           </tr>
         </tbody>
       </table>
     </div>
-   
-    <button [hidden]="true" type="button" id="openBugEdit" data-toggle="modal" data-target="#editBugModal">
-    </button>
 
+  </div>
+  <!-- add user to project -->
+  <div class="modal draggable fade bd-example-modal-lg" id="addUserModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center"> Select a username </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <form #userForm="ngForm" (ngSubmit)="assignProjectAndUser(userForm)">
+            
+            <select (change)="selectChangeHandler($event)">
+              <option value="">Select Users</option>
 
-    <!-- model add bug -->
-    <div class="modal draggable fade bd-example-modal-lg" id="addBugModal" tabindex="-1" role="dialog"
-      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title text-center">New Bug</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div>
-              <form #newBugForm="ngForm" (ngSubmit)="onAddNewBug(newBugForm)">
-                <div class="form-group">
-                  <label for="bugDescription">Bug Description</label>
-                  <input type="text" name="bugDescription" required ngModel class="form-control">
-                </div>
-
-                <div class="form-group">
-                  <label for="bugLocation">Bug Location</label>
-                  <input type="text" name="bugLocation"  required ngModel class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="bugPriority">Bug Priority</label>
-                  <input type="text" name="bugPriority" required ngModel  class="form-control">
-                </div>
-                
-                <select (change)="selectChangeHandler($event)">
-                  <option value="">Select Bug Type option</option>
-                  <option value="mySQL">mySQL</option>
-                  <option value="Spring boot">Spring boot</option>
-                  <option value="Angular">Angular</option>
-                  <option value="Apache Server">Apache Server</option>
-                  
-                </select>
-               
-                  <div class="form-check" style='margin-top: 10px;'>
-                    <label class="form-check-label">
-                      <input type="checkbox" name="isActive"  ngModel class="form-check-input">
-                      Active
-                    </label>
-                  </div>
-
-                <button type="submit" style="display: none;" id="new-bug-save"></button>
-              </form>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="new-bug-close">Close</button>
-            <button type="button" (click)="saveNewBug()" [disabled]="newBugForm.invalid" class="btn btn-primary">Save
-              changes</button>
-          </div>
+              <option  *ngFor="let u of users" [value]="u.username">
+                {{u.username}}
+            
+              </option>
+          
+            </select>
+        
+            <button type="submit" style="display: none;" id="save-assigned-user"></button>
+          </form>
         </div>
       </div>
-    </div>
-
-    <!-- modal edit bug -->
-    <div class="modal draggable fade bd-example-modal-lg" id="editBugModal" tabindex="-1" role="dialog"
-      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title text-center">Update Bug</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="">
-              <form #editBugForm="ngForm">
-                <div class="form-group">
-                  <label for="bugDescription">Bug Description</label>
-                  <input type="text" name="bugDescription" required [(ngModel)]="editBug.bugDescription"
-                    class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="bugLocation">Bug Location</label>
-                  <input type="text" name="bugLocation" required [(ngModel)]="editBug.bugLocation" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="bugPriority">Bug Priority</label>
-                  <input type="text" name="bugPriority" required [(ngModel)]="editBug.bugPriority" class="form-control">
-                </div>
-                <div>Bug Type</div>
-                <select (change)="selectChangeHandler($event)">
-                  <option value="">Select Bug Type option</option>
-                  <option value="mySQL">mySQL</option>
-                  <option value="Spring boot">Spring boot</option>
-                  <option value="Angular">Angular</option>
-                  <option value="Apache Server">Apache Server</option>
-                </select>
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input name="isActive" type="checkbox" required [(ngModel)]="editBug.isActive" class="form-check-input"
-                      >
-                      Active
-                    </label>
-                    
-                    
-
-                  </div>
-
-              </form>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"
-              id="closeEditBugModalButton">Close</button>
-            <button type="button" (click)="onUpdateBug()" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close">Close</button>
+        <button type="button" (click)="saveAssignedUser()" [disabled]="userForm.invalid" class="btn btn-primary">Save
+          changes</button>
       </div>
     </div>
+  </div>
+</div>
+
 
   </div>

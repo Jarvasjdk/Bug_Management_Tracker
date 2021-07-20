@@ -1,11 +1,13 @@
 package com.Bug_Tracker.service.impl;
 import com.Bug_Tracker.Model.Project;
+import com.Bug_Tracker.dto.UserDTO;
 import com.Bug_Tracker.enumeration.Role;
 
 import com.Bug_Tracker.Model.User;
 import com.Bug_Tracker.Model.UserPrincipal;
 import com.Bug_Tracker.exception.domain.EmailExistException;
 import com.Bug_Tracker.exception.domain.UsernameExistException;
+import com.Bug_Tracker.repository.ProjectRepository;
 import com.Bug_Tracker.repository.UserRepository;
 import com.Bug_Tracker.service.ProjectService;
 import com.Bug_Tracker.service.UserService;
@@ -30,11 +32,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
+    private ProjectRepository projectRepository;
 
     @Autowired
-    UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder){
+    UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,ProjectRepository projectRepository){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.projectRepository = projectRepository;
     }
 
     private String generateUserId() {
@@ -88,7 +92,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public String updateUserRole(String role,String username) {
+    public User updateUserRole(String role,String username) {
 
         User user = userRepository.findUserByUsername(username);
         if(role.equals("ROLE_MANAGER")){
@@ -98,12 +102,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setRole(Role.ROLE_ADMIN.name());
         else
             user.setRole(Role.ROLE_USER.name());
-               return role;
+               return user;
     }
 
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+    @Override
+    public List<UserDTO> listProjectUsers(String projectName) {
+        Project project = projectRepository.findProjectByProjectName(projectName);
+        Long projectId= project.getId();
+        return userRepository.findUsersByProjectId(projectId);
     }
 
     @Override

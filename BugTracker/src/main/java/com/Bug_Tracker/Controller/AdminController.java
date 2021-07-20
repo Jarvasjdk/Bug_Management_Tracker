@@ -1,6 +1,8 @@
 package com.Bug_Tracker.Controller;
 
 import com.Bug_Tracker.Model.*;
+import com.Bug_Tracker.exception.domain.EmailExistException;
+import com.Bug_Tracker.exception.domain.UsernameExistException;
 import com.Bug_Tracker.repository.AdminRepository;
 import com.Bug_Tracker.repository.UserRepository;
 import com.Bug_Tracker.service.AdminService;
@@ -52,10 +54,16 @@ public class AdminController {
     }
  //this is just here in backend, it is not implemented in frontend because we do not want users being able to register an admin account
     @PostMapping("/register")
-    public void register(@RequestBody Admin user)    {
-         adminService.register(user.getFirstName(),user.getLastName(),user.getUsername(),user.getPassword(), user.getEmail());
+    public ResponseEntity<Admin> register(@RequestBody Admin user)    {
+        Admin admin = adminService.register(user.getFirstName(),user.getLastName(),user.getUsername(),user.getPassword(), user.getEmail());
+        return new ResponseEntity<>(admin,OK);
 
     }
+//    @PostMapping("/register")
+//    public ResponseEntity<User> register(@RequestBody User user) throws UsernameExistException, EmailExistException {
+//        User newUser =  userService.register(user.getFirstName(),user.getLastName(),user.getUsername(),user.getPassword(), user.getEmail());
+//        return new ResponseEntity<>(newUser, OK);
+//    }
 
 
 
@@ -84,10 +92,7 @@ public class AdminController {
     }
 
 
-    @GetMapping("/list") // list all the users in db for admin to check
-    public List<User> getAllUsers() {
-        return userService.getUsers();
-    }
+
     @DeleteMapping("/delete/{username}") // allows admin to delete user
     @PreAuthorize("hasAnyAuthority('admin:delete')")
     public void deleteUser(@PathVariable("username") String username) throws IOException {
@@ -96,7 +101,7 @@ public class AdminController {
     }
     @PostMapping("/updateUserRole")
   //  @PreAuthorize("hasAnyAuthority('user:update')")
-    public String updateUserRole(@RequestParam("role") String role,
+    public User updateUserRole(@RequestParam("role") String role,
                                  @RequestParam("username") String username)
     {
         return userService.updateUserRole(role,username);

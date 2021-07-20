@@ -1,8 +1,10 @@
 package com.Bug_Tracker.service;
 
 
+import com.Bug_Tracker.Model.Admin;
+
 public interface AdminService {
-    void register(String firstName, String lastName, String username, String password, String email) ;
+    Admin register(String firstName, String lastName, String username, String password, String email) ;
 
 
 

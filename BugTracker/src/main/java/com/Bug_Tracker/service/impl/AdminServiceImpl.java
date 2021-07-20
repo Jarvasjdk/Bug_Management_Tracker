@@ -31,7 +31,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     }
 // note: this is just here to register a user in postman, I dont use it in frontend
     @Override
-    public void register(String firstName, String lastName, String username, String password, String email)  {
+    public Admin register(String firstName, String lastName, String username, String password, String email)  {
         Admin user = new Admin();
         user.setAdminId(generateUserId());
         user.setFirstName(firstName);
@@ -42,7 +42,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         user.setRole(Role.ROLE_ADMIN.name());
         user.setAuthorities(Role.ROLE_ADMIN.getAuthorities());
         adminRepository.save(user); // saves user in mysql database
-
+        return user;
     }
 
 

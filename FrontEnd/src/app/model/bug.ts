@@ -6,7 +6,8 @@ export class Bug{
     public  bugLocation: string;
     public  bugPriority: string;
     public  isActive: boolean;
-    public  bugType: string
+    public  bugType: string;
+    public  projectName: string;
 
     constructor() {
         this.id = '';

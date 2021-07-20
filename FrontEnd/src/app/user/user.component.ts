@@ -6,11 +6,7 @@ import { NgForm } from '@angular/forms';
 import { UserAuthenticationService } from '../service/user-authentication.service';
 import { Router } from '@angular/router';
 import { Bug } from '../model/bug';
-import { NotificationService } from '../service/notification.service';
-import { NotificationType } from '../enum/notification-type.enum';
-import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
-import { Project } from '../model/project';
-import { ProjectService } from '../service/project.service';
+
 
 
 @Component({
@@ -18,10 +14,12 @@ import { ProjectService } from '../service/project.service';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit, OnDestroy {
+export class UserComponent implements OnInit, OnDestroy 
+  {
   public bug: Bug;
-  public gi: string;
-  public selectedBugType: string = '';
+  public users: User[];
+  public projectUsers: User[];
+  public selectedUser = new User();
   private subscriptions: Subscription[] = [];
   public editUser = new User();
   public bugs: Bug[];
@@ -29,158 +27,84 @@ export class UserComponent implements OnInit, OnDestroy {
   public currentBugId: string;
   public currentProjectName: string = '';
   public formD: FormData;
+  public currentProjectN = this.authenticationService.getProjectFromLocalCache();
 
-  constructor(private projectService: ProjectService,private router: Router, private authenticationService: UserAuthenticationService,
-              private userService: UserService,private notificationService: NotificationService) {}
-
+  constructor(private router: Router, private authenticationService: UserAuthenticationService,
+              private userService: UserService) {}
              
-  ngOnInit(): void {
-  this.currentProjectName =this.authenticationService.getProjectFromLocalCache();
-    const formD = this.projectService.listProjectBugsForm(this.currentProjectName);
+  ngOnInit(): void { 
+    
+this.listProjectUsers();
+  this.getUsers();
   
+  }
+  public getUsers(): void {
+  
+   
     this.subscriptions.push(
-      this.projectService.listProjectBugs(formD).subscribe(
-        (response: Bug[]) => {
-          this.bugs = response;
-          console.log(response);
-         
-        }
+      this.userService.getUsers().subscribe(
+        (response: User[]) => {
+          this.users = response;
         
+        }
       )
     );
+
+  }
+  public listProjectUsers(): void {
   
-  }
-  public listProjectBugs(projectNameObject: FormData): void {
-    this.formD = projectNameObject;
- 
+    this.currentProjectName = this.authenticationService.getProjectFromLocalCache();
+    const formD = this.userService.listProjectUsers(this.currentProjectName);
+
     this.subscriptions.push(
-          this.userService.listProjectBugs(projectNameObject).subscribe(
-            (response: Bug[]) => {
-              this.bugs = response;
-              console.log(response);
-             
-            }
-            
-          )
-        );
+      this.userService.getProjectUsers(formD).subscribe(
+        (response: User[]) => {
+          this.projectUsers = response;
+        
+        }
+      )
+    );
+
   }
-public selectChangeHandler(event: any){
 
-  this.selectedBugType = event.target.value;
-  console.log(this.selectedBugType);
-
-}
 
   public onLogOut(): void {
     this.authenticationService.logOut();
+    localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
-
-  public getBugs(): void {
-    
+  // assign project and user to itself
+  public assignProjectAndUser(username: NgForm): void
+  {
+    this.currentProjectName=this.authenticationService.getProjectFromLocalCache();
+    console.log(this.selectedUser)
+    const formD = this.userService.assignUserToProject(this.currentProjectName,this.selectedUser);
     this.subscriptions.push(
-      this.userService.getBugs().subscribe(
-        (response: Bug[]) => {
-          this.bugs = response;
+      this.userService.assignProjectAndUser(formD).subscribe(
+        (response: User) =>{
           console.log(response);
-         
+          this.clickButton('close')
+          this.listProjectUsers();
         }
-        
       )
     );
-
-  }
-  
-
-  public stylefunc(str: string){
-    var nstr = str.toLowerCase();
-    if(nstr === 'high') return 1;
-    else if (nstr === 'medium') return 2;
-    else return 3;
-  }
-  public saveNewBug(): void {
-    this.clickButton('new-bug-save');
-  }
-
-  public onAddNewBug(bugForm: NgForm): void {
     
-    const formData = this.userService.createBugFormDate(bugForm.value,this.selectedBugType); 
-    console.log(formData);
-    this.subscriptions.push(
-      this.userService.addBug(formData).subscribe( 
-        (response: Bug) => {
-          
-          this.clickButton('new-bug-close'); // this will auto close the window by using DOM to click corrosponding to id in it
-          bugForm.reset(); // resets what we put in entries, since when we input data, when we close pop-up and reopen it we want the form to be empty
-          this.getBugs(); 
-          console.log(response);
-          this.notificationService.sendNotification(NotificationType.SUCCESS, `Bug with ID ${response.bugId} added.`);
-
-        },
-        (error: HttpErrorResponse) => {
-          this.notificationService.sendNotification(NotificationType.ERROR, error.error.message);
-        }
-      )
-      );
   }
-  
-// created generic clickButton 
+  public saveAssignedUser(): void {
+    this.clickButton('save-assigned-user');
+  }
   private clickButton(buttonId: string): void {
     document.getElementById(buttonId).click();
   }
-
-  public onUpdateBug(): void {
-    const formData = this.userService.updateBugFormDate(this.editBug,this.currentBugId,this.selectedBugType);
-    console.log(formData);
-    this.subscriptions.push(
-      this.userService.updateBug(formData).subscribe(
-        (response: Bug) => {
-          console.log(response);
-          this.clickButton('closeEditBugModalButton');
-          this.getBugs();
-
-          this.notificationService.sendNotification(NotificationType.SUCCESS, `Bug with ID ${response.bugId} updated.`);
-
-        },
-        (error: HttpErrorResponse) => {
-          this.notificationService.sendNotification(NotificationType.ERROR, error.error.message);
-        }
-        
-      )
-      );
-  }
   
-  public onDeleteBug(bugId: string): void {
-   
-    this.subscriptions.push(this.userService.deleteBug(bugId).subscribe(
-      (response: String) => {
-          console.log(response);
-          this.getBugs();
-          this.notificationService.sendNotification(NotificationType.SUCCESS, `Bug with ID ${response} deleted.`);
-      },
-      (error: HttpErrorResponse) => {
-        this.notificationService.sendNotification(NotificationType.ERROR, error.error.message);
-      }
-    )
-    );
-    
-}
+  
+  public selectChangeHandler(event: any){
 
-  public onEditBug(editBug: Bug): void {
-    console.log(editBug);
-    this.editBug = editBug;
-    this.currentBugId = editBug.bugId;
-    this.clickButton('openBugEdit');
+    this.selectedUser.username = event.target.value;
+    console.log(this.selectedUser);
+  
   }
-  private getUserRole(): string {
-    return this.authenticationService.getUserFromLocalCache().role;
-     
-  }
- public get isManager(): boolean {
-    return this.getUserRole() === 'ROLE_MANAGER';
-  }
-
-
+ 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }

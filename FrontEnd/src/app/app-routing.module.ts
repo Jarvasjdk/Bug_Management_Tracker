@@ -6,11 +6,13 @@ import { RegisterComponent } from './register/register.component';
 import { UserComponent } from './user/user.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { ProjectComponent } from './project/project.component';
+import { BugComponent } from './bug/bug.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'user', component: UserComponent},
+  {path: 'bug', component: BugComponent},
   {path: 'adminPortal', component: AdminLoginComponent},
   {path: 'adminPage', component: AdminComponent},
   {path: 'project', component: ProjectComponent},

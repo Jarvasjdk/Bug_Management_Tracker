@@ -18,6 +18,9 @@ import { NotificationModule } from './notification.module';
 import { NotificationService } from './service/notification.service';
 import { ProjectComponent } from './project/project.component';
 import { ProjectService } from './service/project.service';
+import { BugComponent } from './bug/bug.component';
+import { BugService } from './service/bug.service';
+
 
 
 @NgModule({
@@ -28,7 +31,8 @@ import { ProjectService } from './service/project.service';
     UserComponent,
     AdminComponent,
     AdminLoginComponent,
-    ProjectComponent
+    ProjectComponent,
+    BugComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +44,7 @@ import { ProjectService } from './service/project.service';
     
     
   ],
-  providers: [ NotificationService, UserAuthenticationService,AdminAuthenticationService, UserService, ProjectService,
+  providers: [ NotificationService, UserAuthenticationService,AdminAuthenticationService, UserService, ProjectService, BugService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   {provide: HTTP_INTERCEPTORS, useClass: AdminAuthInterceptor, multi: true} ],
   bootstrap: [AppComponent]

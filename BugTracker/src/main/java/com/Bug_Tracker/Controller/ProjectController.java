@@ -1,8 +1,10 @@
 package com.Bug_Tracker.Controller;
 
+import com.Bug_Tracker.Model.Bug;
 import com.Bug_Tracker.Model.Project;
 import com.Bug_Tracker.dto.BugDTO;
 import com.Bug_Tracker.dto.ProjectDTO;
+import com.Bug_Tracker.dto.UserDTO;
 import com.Bug_Tracker.repository.UserRepository;
 import com.Bug_Tracker.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,6 @@ public class ProjectController {
 
     }
 
-
     @PostMapping("/createProject")
     @PreAuthorize("hasAnyAuthority('project:create')")
     public Project createProject(@RequestParam("projectName") String projectName,
@@ -34,7 +35,7 @@ public class ProjectController {
         return projectService.addProject(projectName, projectDescription);
 
     }
-
+// and user to project
     @PostMapping("/assignProjectToUser")
     @PreAuthorize("hasAnyAuthority('project:assign')")
     public Project assignProjectToUser(@RequestParam("projectName") String projectName,
@@ -42,21 +43,32 @@ public class ProjectController {
         return projectService.assignProjectToUser(projectName, username);
     }
     @PostMapping("/listUserAssignedProjects")
-    public List<ProjectDTO> listUserAssignedProjects(@RequestParam("username") String username){
-        return projectService.listUserAssignedProjects(username);
+    public List<ProjectDTO> listUserProjects(@RequestParam("username") String username){
+        return projectService.listUserProjects(username);
     }
+    @GetMapping("/list")
+    public List<Project> getAllProjects() {
+        return projectService.getProjects();
+
+    }
+   /* @PostMapping("/listProjectUsers")
+    public List<UserDTO> listProjectUsers(@RequestParam("projectName") String projectName){
+        return projectService.listProjectUsers(projectName);
+    }*/
 
     @PostMapping("/assignProjectIdToBug")
     @PreAuthorize("hasAnyAuthority('project:assign')")
-    public Project assignBugsToProject(@RequestParam("projectName") String projectName,
+    public Project assignProjectToBug(@RequestParam("projectName") String projectName,
                                        @RequestParam("bugId") String bugId) {
-        return projectService.assignBugToProject(projectName, bugId);
+        return projectService.assignProjectToBug(projectName, bugId);
     }
-    @PostMapping("/listProjectBugs")
+
+
+   /* @PostMapping("/listProjectBugs")
     public List<BugDTO> listProjectBugs(@RequestParam("projectName") String projectName){
         return projectService.listProjectBugs(projectName);
     }
-
+*/
 
 
 }

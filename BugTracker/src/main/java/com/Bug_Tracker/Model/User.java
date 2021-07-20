@@ -12,8 +12,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String user_id; // this is not same as joincolumn user_id, user_id from join is referring to my long id
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     private String username;
     private String password;
     private String email;
@@ -39,8 +39,8 @@ public class User {
     public User(Long id, String user_id, String first_name, String last_name, String username, String password, String email,  String role, String[] authorities, boolean is_active, Set<Project> project,Project projects) {
         this.id = id;
         this.user_id = user_id;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.firstName = first_name;
+        this.lastName = last_name;
         this.username = username;
         this.password = password;
         this.email = email;
@@ -79,19 +79,19 @@ public class User {
     }
 
     public String getFirstName() {
-        return first_name;
+        return firstName;
     }
 
     public void setFirstName(String first_name) {
-        this.first_name = first_name;
+        this.firstName = first_name;
     }
 
     public String getLastName() {
-        return last_name;
+        return lastName;
     }
 
     public void setLastName(String last_name) {
-        this.last_name = last_name;
+        this.lastName = last_name;
     }
 
     public String getUsername() {

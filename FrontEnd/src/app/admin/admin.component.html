@@ -16,7 +16,7 @@
         <div class="nav nav-pills">
           
           <h3>
-            Welcome, Nathan
+            Welcome
           </h3>
            
         </div>
@@ -39,7 +39,7 @@
               <th>Username</th>
               <th>Email</th>
               <th>Role</th>
-              <th>Delete</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody *ngFor="let appUser of users">
@@ -54,15 +54,59 @@
               
               <td class="">
                 <div class="btn-group">
-                  <button  class="btn btn-outline-danger" (click)="onDeleteUser(appUser?.username)"><i class="fas fa-trash"></i></button>
+                  <button type="button"class="btn btn-outline-danger" (click)="onDeleteUser(appUser?.username)"><i class="fas fa-trash"></i></button>
+                  <button type="button" class="btn btn-outline-info" (click)="saveUsername(appUser?.username)" id="openRoleEdit" data-toggle="modal" data-target="#editRoleModal"><i class="fas fa-edit"></i>
+                  </button>
                 </div>
               </td>
+              <td>
+                <div>
+                
+              </div>
+              </td>
+            
+            
             </tr>
           </tbody>
         </table>
       </div>
-  
+      </div>
       
+      <!-- modal update user role -->
+      <div class="modal draggable fade bd-example-modal-lg" id="editRoleModal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-center">Select Role</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="">
+                <form #editRoleForm="ngForm">
+                  
+                  <div>User Role</div>
+                  <select (change)="selectChangeHandler($event)">
+                    <option value="">Select User Role option</option>
+                    <option value="ROLE_USER">User</option>
+                    <option value="ROLE_MANAGER">Manager</option>
+                    <option value="ROLE_ADMIN">Admin</option>
+                  </select>
+                 
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                id="close">Close</button>
+              <button type="button" (click)="updateUserRole()" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
   
     </div>
   

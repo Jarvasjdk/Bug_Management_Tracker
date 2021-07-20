@@ -55,6 +55,13 @@ public getUserFromLocalCache(): User {
     return JSON.parse(localStorage.getItem('user')); 
   }
 
+  public addUserNameToLocalCache(user: string): void {
+    localStorage.setItem('username', JSON.stringify(user));
+  }
+public getUserNameFromLocalCache(): string {
+    return JSON.parse(localStorage.getItem('username')); 
+  }
+
   public addProjectToLocalCache(project: string): void {
     localStorage.setItem('proj', JSON.stringify(project));
   }

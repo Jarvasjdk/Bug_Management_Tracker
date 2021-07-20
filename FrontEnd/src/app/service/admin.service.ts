@@ -3,6 +3,7 @@ import { HttpClient} from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
+import { NgForm } from '@angular/forms';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,11 +13,14 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   public getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.host}/adminPortal/list`);
+    return this.http.get<User[]>(`${this.host}/user/list`);
+  }
+  public updateUserRole(user: FormData): Observable<User> {
+    return this.http.post<User>(`${this.host}/adminPortal/updateUserRole`,user);
   }
 
-  public deleteUser(username: string): void {
-    this.http.delete(`${this.host}/adminPortal/delete/${username}`).subscribe();
+  public deleteUser(username: string): Observable<User> {
+    return this.http.delete<User>(`${this.host}/adminPortal/delete/${username}`);
  }
 
   public addUsersToLocalCache(users: User[]): void {
@@ -29,5 +33,13 @@ export class AdminService {
     }
     return null;
   }
+  public updateUserRoleForm(username: string,selectedUser: User): FormData
+{
+  const formData = new FormData();
+  formData.append('role', selectedUser.role);
+  formData.append('username', username);
+  
+return formData;
+}
 
 }

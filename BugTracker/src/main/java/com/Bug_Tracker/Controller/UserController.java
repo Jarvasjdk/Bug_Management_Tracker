@@ -4,9 +4,9 @@ package com.Bug_Tracker.Controller;
 
 import com.Bug_Tracker.Model.User;
 import com.Bug_Tracker.Model.UserPrincipal;
+import com.Bug_Tracker.dto.UserDTO;
 import com.Bug_Tracker.exception.domain.EmailExistException;
 import com.Bug_Tracker.exception.domain.UsernameExistException;
-import com.Bug_Tracker.service.ProjectService;
 import com.Bug_Tracker.service.UserService;
 import com.Bug_Tracker.utility.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -39,6 +41,10 @@ public class UserController {
 
     }
 
+    @GetMapping("/list") // list all the users in db for admin to check
+    public List<User> getAllUsers() {
+        return userService.getUsers();
+    }
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) throws UsernameExistException, EmailExistException {
@@ -55,6 +61,7 @@ public class UserController {
         return new ResponseEntity<>(loginUser, headers, OK);
     }
 
+
     private HttpHeaders getJWTHeader(UserPrincipal user) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Jwt-Token",jwtTokenProvider.generateJwtToken(user));
@@ -68,10 +75,14 @@ public class UserController {
     }
     @PostMapping("/updateUserRole")
     @PreAuthorize("hasAnyAuthority('user:update')")
-    public String updateUserRole(@RequestParam("role") String role,
+    public User updateUserRole(@RequestParam("role") String role,
                                  @RequestParam("username") String username)
     {
         return userService.updateUserRole(role,username);
 
+    }
+    @PostMapping("/listProjectUsers")
+    public List<UserDTO> listProjectUsers(@RequestParam("projectName") String projectName){
+        return userService.listProjectUsers(projectName);
     }
 }

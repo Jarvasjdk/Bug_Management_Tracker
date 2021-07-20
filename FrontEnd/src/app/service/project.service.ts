@@ -54,11 +54,14 @@ public listProjectBugsForm(project: string): FormData
   
 return formData;
 }
-public getProjects(formData: FormData): Observable<Project[]> {
+public getProjectsAssignedToUser(formData: FormData): Observable<Project[]> {
   return this.http.post<Project[]>(`${this.host}/project/listUserAssignedProjects`,formData);
+}
+public getProjects(): Observable<Project[]> {
+  return this.http.get<Project[]>(`${this.host}/project/list`);
 }
 public listProjectBugs(formData: FormData): Observable<Bug[]>
 {
-    return this.http.post<Bug[]>(`${this.host}/project/listProjectBugs`,formData);
+    return this.http.post<Bug[]>(`${this.host}/bug/listProjectBugs`,formData);
   }
 }
