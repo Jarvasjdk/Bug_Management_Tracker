@@ -59,11 +59,7 @@ public class AdminController {
         return new ResponseEntity<>(admin,OK);
 
     }
-//    @PostMapping("/register")
-//    public ResponseEntity<User> register(@RequestBody User user) throws UsernameExistException, EmailExistException {
-//        User newUser =  userService.register(user.getFirstName(),user.getLastName(),user.getUsername(),user.getPassword(), user.getEmail());
-//        return new ResponseEntity<>(newUser, OK);
-//    }
+
 
 
 
@@ -71,11 +67,9 @@ public class AdminController {
     public ResponseEntity<Admin> login(@RequestBody Admin adminUser) throws UsernameNotFoundException {
         authenticate(adminUser.getUsername(),adminUser.getPassword()); // success for kp 123
         Admin loginAdmin = adminRepository.findAdminByUsername(adminUser.getUsername());
-      //  if(loginAdmin == null) throw new UserNotFoundException("User not found");
         AdminPrinciple adminPrincipal = new AdminPrinciple(loginAdmin);
         HttpHeaders headers = getJWTHeader(adminPrincipal);
         return new ResponseEntity<>(loginAdmin, headers, OK);
-       // return getJWTHeader(adminPrincipal); // returns token
 
 
     }
@@ -100,7 +94,7 @@ public class AdminController {
 
     }
     @PostMapping("/updateUserRole")
-  //  @PreAuthorize("hasAnyAuthority('user:update')")
+   @PreAuthorize("hasAnyAuthority('user:update')")
     public User updateUserRole(@RequestParam("role") String role,
                                  @RequestParam("username") String username)
     {

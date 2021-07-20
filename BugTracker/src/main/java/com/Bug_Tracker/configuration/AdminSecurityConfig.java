@@ -12,8 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
-// the reason i needed to make another configuration class is theres no way to have two overridding configure methods in one class
-// then since i had to create another security config class i needed another authentication manager. since there were two auth managers, i had to use qualifer to specify which one i wanted
+// the reason I needed to make another configuration class is because there is no way to have two over-ridding configure methods in one class
+// then since I had to create another security config class I needed another authentication manager. Since there were two auth managers, I had to use qualifier to specify which one I wanted
 @Configuration
 @EnableWebSecurity
 public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {

@@ -1,11 +1,8 @@
 package com.Bug_Tracker.Controller;
 import com.Bug_Tracker.Model.Bug;
-import com.Bug_Tracker.Model.Project;
-import com.Bug_Tracker.Model.User;
 import com.Bug_Tracker.dto.BugDTO;
 import com.Bug_Tracker.repository.BugRepository;
 import com.Bug_Tracker.repository.ProjectRepository;
-import com.Bug_Tracker.repository.UserRepository;
 import com.Bug_Tracker.service.BugService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.Date;
 import java.util.List;
 @RestController
 @RequestMapping(path = {"/" ,"/bug"})
@@ -40,7 +36,7 @@ public class BugController
 
 
         @PostMapping("/addBug")
-      //  @PreAuthorize("hasAnyAuthority('user:create')")
+       @PreAuthorize("hasAnyAuthority('user:create')")
         public List<BugDTO> addNewBug(@RequestParam("bugDescription") String description,
                                       @RequestParam("bugType") String bugType,
                                       @RequestParam("bugLocation") String bugLocation,
@@ -54,20 +50,13 @@ public class BugController
 
            return bugService.addNewBug (description, bugType, bugLocation, priority, Boolean.parseBoolean(isActive), projectName);
 
-                 //    assignProjectToBug(projectName,bug.getBugId());, Bug bug = bugservice etc
-                     // return bug
+
 
         }
-    public void assignProjectToBug(String projectName, String bugId) {
-        Project p = projectRepository.findProjectByProjectName(projectName);
-        Bug b = bugRepository.findBugByBugId(bugId);
-        p.getBugs().add(b);
-        System.out.println(p);
-        //return p;
-    }
-//
+
+
         @PostMapping("/updateBug")
-      //  @PreAuthorize("hasAnyAuthority('user:update')")
+       @PreAuthorize("hasAnyAuthority('user:update')")
         public Bug updateBug(@RequestParam("bugId") String bugId,
                                              @RequestParam("bugDescription") String bugDescription,
                                              @RequestParam("bugLocation") String bugLocation,
@@ -89,7 +78,7 @@ public class BugController
     }
 
     @DeleteMapping("/delete/{bugId}")
-  //  @PreAuthorize("hasAnyAuthority('user:delete')")
+   @PreAuthorize("hasAnyAuthority('user:delete')")
     public String deleteBug(@PathVariable("bugId") String id) throws AccessDeniedException {
          return bugService.deleteBug(id);
 
