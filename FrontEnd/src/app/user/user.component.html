@@ -1,31 +1,46 @@
+
 <div class="container">
-  <div class="row mb-2 mt-2 text-center">
+  <!-- <div class="row mb-2 mt-2 text-center">
     <div class="col-md-4">
     </div>
     <div class="col-md-4">
-      <h5>Manager Users</h5>
+      <h5>Manager Project Users</h5>
       
     </div>
     <div class="col-md-4">
     </div>
-  </div>
+    
+  </div> -->
 
-  <!-- nav bar -->
-  <nav class="navbar navbar-expand-md breadcrumb">
+  <nav class="navbar navbar-light bg-light justify-content-between">
+    <a class="navbar-brand">Logged in as: {{t}}</a>
+    <form class="form-inline">
+      <button class="btn-secondary my-2 my-sm-0" (click)="onLogOut()" style="margin-right:20px;">LogOut</button>
+      <button (click)="navToProject()"  class="btn-secondary my-2 my-sm-0" >
+        <span >Back to projects</span>  
+      </button>
+    </form>
+  </nav>
+  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <div class="nav nav-pills">
         
         <h3>
           Welcome
         </h3>
-         
+        
       </div>
+      <button (click)="onLogOut()" style="margin-left: 800px;" class="btn-secondary">
+        <span >Logout</span>  
+      </button>
     </div>
-  </nav>
+  </nav> -->
 
-  <button (click)="onLogOut()"  class="btn btn-info">
+  <!-- <button (click)="onLogOut()"  class="btn btn-info">
     <span >Logout</span>  
-  </button>
+  </button> -->
+
+  
   <div class="tab-content mt-3" id="myTabContent">
     <!-- user table -->
     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addUserModal">

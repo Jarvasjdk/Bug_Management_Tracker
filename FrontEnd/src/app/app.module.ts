@@ -20,6 +20,7 @@ import { ProjectComponent } from './project/project.component';
 import { ProjectService } from './service/project.service';
 import { BugComponent } from './bug/bug.component';
 import { BugService } from './service/bug.service';
+import { AdminService } from './service/admin.service';
 
 
 
@@ -44,7 +45,7 @@ import { BugService } from './service/bug.service';
     
     
   ],
-  providers: [ NotificationService, UserAuthenticationService,AdminAuthenticationService, UserService, ProjectService, BugService,
+  providers: [ NotificationService, UserAuthenticationService,AdminAuthenticationService, UserService, ProjectService, BugService, AdminService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   {provide: HTTP_INTERCEPTORS, useClass: AdminAuthInterceptor, multi: true} ],
   bootstrap: [AppComponent]

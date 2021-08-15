@@ -27,17 +27,32 @@ export class UserComponent implements OnInit, OnDestroy
   public currentBugId: string;
   public currentProjectName: string = '';
   public formD: FormData;
-  public currentProjectN = this.authenticationService.getProjectFromLocalCache();
-
+  public currentProjectN = this.authenticationService.getProjectNameFromLocalCache();
+  public t: string = '';
   constructor(private router: Router, private authenticationService: UserAuthenticationService,
               private userService: UserService) {}
              
   ngOnInit(): void { 
+
+    if(this.getUserRole() === 'ROLE_MANAGER'){
+      this.t = 'Manager';
+      
+    }
+    else{
+      this.t = 'User';
+    }
     
 this.listProjectUsers();
   this.getUsers();
   
   }
+  private getUserRole(): string {
+    
+    return  this.authenticationService.getUserFromLocalCache().role;
+    // console.log(this.t);
+   //  return this.authenticationService.getUserFromLocalCache().role;
+ 
+   }
   public getUsers(): void {
   
    
@@ -53,7 +68,7 @@ this.listProjectUsers();
   }
   public listProjectUsers(): void {
   
-    this.currentProjectName = this.authenticationService.getProjectFromLocalCache();
+    this.currentProjectName = this.authenticationService.getProjectNameFromLocalCache();
     const formD = this.userService.listProjectUsers(this.currentProjectName);
 
     this.subscriptions.push(
@@ -66,7 +81,9 @@ this.listProjectUsers();
     );
 
   }
-
+  public navToProject(): void {
+    this.router.navigate(['/project']);
+  }
 
   public onLogOut(): void {
     this.authenticationService.logOut();
@@ -76,7 +93,7 @@ this.listProjectUsers();
   // assign project and user to itself
   public assignProjectAndUser(username: NgForm): void
   {
-    this.currentProjectName=this.authenticationService.getProjectFromLocalCache();
+    this.currentProjectName=this.authenticationService.getProjectNameFromLocalCache();
     console.log(this.selectedUser)
     const formD = this.userService.assignUserToProject(this.currentProjectName,this.selectedUser);
     this.subscriptions.push(

@@ -36,7 +36,7 @@ public class BugController
 
 
         @PostMapping("/addBug")
-       @PreAuthorize("hasAnyAuthority('user:create')")
+     //  @PreAuthorize("hasAnyAuthority('user:create')")
         public List<BugDTO> addNewBug(@RequestParam("bugDescription") String description,
                                       @RequestParam("bugType") String bugType,
                                       @RequestParam("bugLocation") String bugLocation,

@@ -7,7 +7,9 @@ import { AdminService } from '../service/admin.service';
 import { Admin } from '../model/admin';
 import { UserAuthenticationService } from '../service/user-authentication.service';
 import { UserService } from '../service/user.service';
-
+import { HttpErrorResponse } from '@angular/common/http';
+import { NotificationService } from '../service/notification.service';
+import { NotificationType } from '../enum/notification-type.enum';
 
 @Component({
   selector: 'app-admin',
@@ -24,7 +26,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   public userName: string;
   
 
-  constructor(private userService: UserService,private userAuthenticationService: UserAuthenticationService ,private router: Router, private adminAuthenticationService: AdminAuthenticationService,
+  constructor(private notificationService: NotificationService,private userAuthenticationService: UserAuthenticationService ,private router: Router, private adminAuthenticationService: AdminAuthenticationService,
               private adminService: AdminService) {}
 
   ngOnInit(): void { 
@@ -58,6 +60,9 @@ const form = this.adminService.updateUserRoleForm(this.userName,this.selectedUse
         (response: User) => {
             this.getUsers();
             this.clickButton('close');
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.notificationService.sendNotification(NotificationType.ERROR, errorResponse.error.message);
         }
       )
     );
@@ -71,6 +76,9 @@ const form = this.adminService.updateUserRoleForm(this.userName,this.selectedUse
         (response: User[]) => {
           this.users = response;
         
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.notificationService.sendNotification(NotificationType.ERROR, errorResponse.error.message);
         }
       )
     );
@@ -84,6 +92,9 @@ const form = this.adminService.updateUserRoleForm(this.userName,this.selectedUse
       (response: User) =>{
         console.log(response);
         this.getUsers();
+      },
+      (errorResponse: HttpErrorResponse) => {
+        this.notificationService.sendNotification(NotificationType.ERROR, errorResponse.error.message);
       }
     )
     );

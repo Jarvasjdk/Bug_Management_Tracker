@@ -94,7 +94,7 @@ public class AdminController {
 
     }
     @PostMapping("/updateUserRole")
-   @PreAuthorize("hasAnyAuthority('user:update')")
+   @PreAuthorize("hasAnyAuthority('admin:update')")
     public User updateUserRole(@RequestParam("role") String role,
                                  @RequestParam("username") String username)
     {

@@ -5,6 +5,8 @@ import { UserAuthenticationService } from '../service/user-authentication.servic
 import { Router } from '@angular/router';
 import { Project } from '../model/project';
 import { Bug } from '../model/bug';
+import { User } from '../model/user';
+
 
 import { NotificationService } from '../service/notification.service';
 import { NotificationType } from '../enum/notification-type.enum';
@@ -31,14 +33,19 @@ export class ProjectComponent implements OnInit {
   public test: boolean;
   public t: string = '';
   public bugs: Bug[];
+  public role: User;
 
   
   ngOnInit(): void {
     if(this.getUserRole() === 'ROLE_MANAGER'){
+      this.t = 'Manager';
       this.getProjects();
     }
-    else
-    this.getProjectsAssignedToUser(); 
+    else{
+      this.t = 'User';
+      this.getProjectsAssignedToUser(); 
+    }
+   
   }
   public getProjects(): void {
 this.subscriptions.push(
@@ -49,7 +56,11 @@ this.subscriptions.push(
   )
 );
   }
- 
+
+public getRole(): void {
+  
+  
+} 
 public selectChangeHandler(event: any){
 
   this.selectedProjectType = event.target.value;
@@ -65,9 +76,9 @@ public selectChangeHandler(event: any){
   }
   private getUserRole(): string {
     
-    this.t = this.authenticationService.getUserFromLocalCache().role;
-    console.log(this.t);
-    return this.authenticationService.getUserFromLocalCache().role;
+   return  this.authenticationService.getUserFromLocalCache().role;
+   // console.log(this.t);
+  //  return this.authenticationService.getUserFromLocalCache().role;
 
   }
  public get isManager(): boolean {
@@ -97,17 +108,20 @@ public ManageUsers():void{
     );
 
   }
-  // list bugs
-  public navToBug(project:string): void {
-    localStorage.removeItem('proj');
-    this.userAuthenticationService.addProjectToLocalCache(project);
-    this.t = this.userAuthenticationService.getProjectFromLocalCache();
+  // list bugs // want to list users assigned to project, and project name/description
+  public navToBug(projectName:string,projectDescription:string): void {
+    localStorage.removeItem('projectName');
+    localStorage.removeItem('projectDescription');
+    this.userAuthenticationService.addProjectNameToLocalCache(projectName);
+    this.userAuthenticationService.addProjectDescriptionToLocalCache(projectDescription);
+    this.t = this.userAuthenticationService.getProjectNameFromLocalCache();
+
     this.router.navigate(['/bug']);
 
  }
  public navToManager(project:string): void {
-  this.userAuthenticationService.addProjectToLocalCache(project);
-  this.t = this.userAuthenticationService.getProjectFromLocalCache();
+  this.userAuthenticationService.addProjectNameToLocalCache(project);
+  this.t = this.userAuthenticationService.getProjectNameFromLocalCache();
   this.router.navigate(['/user']);
 
 }

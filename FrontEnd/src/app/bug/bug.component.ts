@@ -10,6 +10,10 @@ import { NotificationType } from '../enum/notification-type.enum';
 import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
 import { ProjectService } from '../service/project.service';
 import { BugService } from '../service/bug.service';
+import { UserService } from '../service/user.service';
+import { Project } from '../model/project';
+
+
 
 
 
@@ -28,13 +32,26 @@ export class BugComponent implements OnInit, OnDestroy {
   public currentBugId: string;
   public currentProjectName: string = '';
   public formD: FormData;
+  public projectUsers: User[];
+  public projects: Project[];
+  public projectName: string;
+  public projectDescription: string;
+  public t: string = '';
 
-  constructor(private bugService: BugService,private projectService: ProjectService,private router: Router, private authenticationService: UserAuthenticationService,
+
+  constructor(private userService: UserService,private bugService: BugService,private projectService: ProjectService,private router: Router, private authenticationService: UserAuthenticationService,
               private notificationService: NotificationService) {}
 
              
   ngOnInit(): void {
-  this.currentProjectName =this.authenticationService.getProjectFromLocalCache();
+    if(this.getUserRole() === 'ROLE_MANAGER'){
+      this.t = 'Manager';
+      
+    }
+    else{
+      this.t = 'User';
+    }
+  this.currentProjectName =this.authenticationService.getProjectNameFromLocalCache();
     const formD = this.bugService.listProjectBugsForm(this.currentProjectName);
   
     this.subscriptions.push(
@@ -47,7 +64,28 @@ export class BugComponent implements OnInit, OnDestroy {
         
       )
     );
+    this.listProjectUsers();
+    this.getProject();
   
+  }
+  public getProject(): void {
+    this.projectName = this.authenticationService.getProjectNameFromLocalCache();
+    this.projectDescription = this.authenticationService.getProjectDescriptionToLocalCache();
+      }
+  public listProjectUsers(): void {
+  
+    this.currentProjectName = this.authenticationService.getProjectNameFromLocalCache();
+    const formD = this.userService.listProjectUsers(this.currentProjectName);
+
+    this.subscriptions.push(
+      this.userService.getProjectUsers(formD).subscribe(
+        (response: User[]) => {
+          this.projectUsers = response;
+        
+        }
+      )
+    );
+
   }
   public listProjectBugs(projectName: FormData): void {
     
@@ -74,7 +112,9 @@ public selectChangeHandler(event: any){
     this.authenticationService.logOut();
     this.router.navigate(['/login']);
   }
-
+  public navToProject(): void {
+    this.router.navigate(['/project']);
+  }
   public stylefunc(str: string){
     var nstr = str.toLowerCase();
     if(nstr === 'high') return 1;
@@ -88,7 +128,7 @@ public selectChangeHandler(event: any){
   public onAddNewBug(bugForm: NgForm): void {
     const formData = this.bugService.createBugFormDate(bugForm.value,this.selectedBugType); 
     console.log(formData);
-    this.currentProjectName =this.authenticationService.getProjectFromLocalCache();
+    this.currentProjectName =this.authenticationService.getProjectNameFromLocalCache();
     const formD = this.projectService.listProjectBugsForm(this.currentProjectName);
   
     this.subscriptions.push(
@@ -116,7 +156,7 @@ public selectChangeHandler(event: any){
 
   public onUpdateBug(): void {
     const formData = this.bugService.updateBugFormDate(this.editBug,this.currentBugId,this.selectedBugType);
-    this.currentProjectName =this.authenticationService.getProjectFromLocalCache();
+    this.currentProjectName =this.authenticationService.getProjectNameFromLocalCache();
     const formD = this.projectService.listProjectBugsForm(this.currentProjectName);
     console.log(formData);
     this.subscriptions.push(
@@ -138,7 +178,7 @@ public selectChangeHandler(event: any){
   }
   
   public onDeleteBug(bugId: string): void {
-    this.currentProjectName =this.authenticationService.getProjectFromLocalCache();
+    this.currentProjectName =this.authenticationService.getProjectNameFromLocalCache();
     const formD = this.projectService.listProjectBugsForm(this.currentProjectName);
     this.subscriptions.push(this.bugService.deleteBug(bugId).subscribe(
       (response: String) => {

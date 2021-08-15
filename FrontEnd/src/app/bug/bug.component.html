@@ -1,39 +1,123 @@
-<div class="container">
-    <div class="row mb-2 mt-2 text-center">
-      <div class="col-md-4">
-      </div>
-      <div class="col-md-4">
-        <h3>Bug Management Portal</h3>
-        
-      </div>
-      <div class="col-md-4">
+
+    
+    <!-- <button (click)="navToProject()"  class="btn btn-info">
+        <span >Back to projects</span>  
+      </button> -->
+     
+     <div class="container">
+      <div class="wrapper">
+        <nav class="navbar navbar-light bg-light justify-content-between">
+          <a class="navbar-brand">Logged in as: {{t}}</a>
+          <form class="form-inline">
+            <button class="btn-secondary my-2 my-sm-0" (click)="onLogOut()" style="margin-right:20px;">LogOut</button>
+            <button (click)="navToProject()"  class="btn-secondary my-2 my-sm-0" >
+              <span >Back to projects</span>  
+            </button>
+          </form>
+        </nav>
+       
+        <div class="container-md" style="width: 100%;">
+        <div>
+        <!-- <header> -->
+          <!-- Project table style="width: 1185px;" -->
+          <div class="col-md-12">
+       <div class="tab-pane fade show active"  id="projects">
+         
+         <table class="table table-hover" >
+           <thead class="table-borderless" >
+             <th colspan="4"  class="project-tab"  >Details for Project {{projectName}}</th>
+      
+             <tr class="text-center">
+      
+               <th>Project Name</th>
+               <th>Project Description</th>
+               
+      
+             </tr>
+           </thead>
+           <tbody >
+             <tr class="text-center">
+      
+               <td>{{projectName}}</td>
+               <td>{{projectDescription}}</td>
+             
+             </tr>
+           </tbody>
+           
+         </table>
+       </div>
+      
       </div>
     </div>
-  
-    <button (click)="onLogOut()"  class="btn btn-info">
-      <span >Logout</span>  
-    </button>
-  
-    <div class="tab-content mt-3" id="myTabContent">
-      <!-- Bug table -->
-      <div class="tab-pane fade show active" id="bugs">
-        <div class="mb-3 float-right">
-          <div class="btn-group mr-2">
-  
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addBugModal">
-              <i class="fa fa-plus"></i>New Bug
-            </button>
-          </div>
-        </div>
-        <table class="table table-hover">
+      
+      
+      
+        <!-- <header> -->
+          <!-- Project table style="width: 1185px;" -->
+          <div class="wrapper-2">
+        <div class="col-xs-6" style="margin-right: 20px;"> 
+      
+       <div class="tab-pane fade show active"  id="projects">
+         
+        <table class="table table-hover" style="box-shadow: 20px 20px 1em;" style="margin-top: 55px;" >
+             
           <thead class="table-borderless">
+              <th colspan="4"  style="background-color: yellowgreen;"  >
+                <div style="margin-right: 10px;" >Assigned Users</div>
+              </th>
+            <tr class="text-center">
+             
+             
+              <th>Username</th>
+             <!-- <th>Email</th> -->
+              <th>Role</th>
+             
+            </tr>
+          </thead>
+          <tbody *ngFor="let appUser of projectUsers">
+            <tr class="text-center">
+              
+             
+              <td >{{appUser?.username}}</td>
+             <!-- <td >{{appUser?.email}}</td> -->
+              <td >{{appUser?.role}}</td>
+              
+            </tr>
+          </tbody>
+        </table>
+
+       </div>
+      </div >
+      <!-- </div> -->
+      
+      
+      <div class=".container-bug">
+        <!-- <header> -->
+        <div class="col-xs-6" >
+       <!-- Bug table -->
+       <div class="tab-pane fade show active" id="bugs">
+        <div class="mb-3 float-right">
+
+            <div class="btn-group mr-2">
+    
+              <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addBugModal">
+                <i class="fa fa-plus" ></i>New Bug
+              </button>
+            </div>
+
+          </div>
+          <!-- <table class="row" class="table table-hover" style="margin-bottom: 30px;">-->
+        <table class="row" class="table table-hover" >
+          <thead class="table-borderless">
+            <th colspan="8" style="background-color: red;">Current Bugs</th>
+
             <tr class="text-center">
   
-              <th>Bug ID</th>
-              <th>Bug Description</th>
-              <th>Bug Location</th>
-              <th>Bug Priority</th>
-              <th>Bug Type</th>
+              <th>ID</th>
+              <th>Description</th>
+              <th>Location</th>
+              <th>Priority</th>
+              <th>Type</th>
               <th>Status</th>
               <th>Actions</th>
   
@@ -68,12 +152,18 @@
             </tr>
           </tbody>
         </table>
-      </div>
-     
+   
       <button [hidden]="true" type="button" id="openBugEdit" data-toggle="modal" data-target="#editBugModal">
       </button>
-  
-  
+    </div>
+
+</div>
+       <!-- </header> -->
+      </div>
+      </div>
+      </div>
+    </div> 
+  </div>
       <!-- model add bug -->
       <div class="modal draggable fade bd-example-modal-lg" id="addBugModal" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -89,21 +179,21 @@
               <div>
                 <form #newBugForm="ngForm" (ngSubmit)="onAddNewBug(newBugForm)">
                   <div class="form-group">
-                    <label for="bugDescription">Bug Description</label>
+                    <label for="bugDescription">Description</label>
                     <input type="text" name="bugDescription" required ngModel class="form-control">
                   </div>
   
                   <div class="form-group">
-                    <label for="bugLocation">Bug Location</label>
+                    <label for="bugLocation">Location</label>
                     <input type="text" name="bugLocation"  required ngModel class="form-control">
                   </div>
                   <div class="form-group">
-                    <label for="bugPriority">Bug Priority</label>
+                    <label for="bugPriority">Priority</label>
                     <input type="text" name="bugPriority" required ngModel  class="form-control">
                   </div>
                   
                   <select (change)="selectChangeHandler($event)">
-                    <option value="">Select Bug Type option</option>
+                    <option value="">Select Bug Type</option>
                     <option value="mySQL">mySQL</option>
                     <option value="Spring boot">Spring boot</option>
                     <option value="Angular">Angular</option>
@@ -191,5 +281,6 @@
           </div>
         </div>
       </div>
-  
-    </div>
+    
+   
+    

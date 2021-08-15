@@ -1,17 +1,36 @@
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="#">Features</a>
+      <a class="nav-item nav-link" href="#">Pricing</a>
+      <a class="nav-item nav-link disabled" href="#">Disabled</a>
+    </div>
+  </div> -->
 <div class="container">
+  
+  <nav class="navbar navbar-light badge-light justify-content-between">
+    <div class="navbar-brand"> <div class="" > Logged in as: {{t}}</div></div>
+    <form class="form-inline">
+      <button class="btn-secondary my-2 my-sm-0" (click)="onLogOut()">LogOut</button>
+    </form>
+  </nav>
     <div class="row mb-2 mt-2 text-center">
       <div class="col-md-4">
       </div>
       <div class="col-md-4">
         <h3> My Projects</h3>
-        
+       
       </div>
-      <div class="col-md-4">
-      </div>
+      
     </div>
-    <button (click)="onLogOut()"  class="btn btn-info">
+    <!-- <button (click)="onLogOut()"  class="btn btn-info">
       <span >Logout</span>  
-    </button>
+    </button> -->
     <div class="tab-content mt-3" id="myTabContent">
       <!-- Project table -->
       <div class="tab-pane fade show active" id="projects">
@@ -29,7 +48,7 @@
   
               <th>Project Name</th>
               <th>Project Description</th>
-              <th>Actions</th>
+              
   
             </tr>
           </thead>
@@ -40,14 +59,13 @@
               <td>{{appProject?.projectDescription}}</td>
             
               
-                <div class="btn-group">
-                  
-                    <button (click)="navToManager(appProject.projectName)" [hidden]="!isManager" class="btn btn-info" style='margin-right: 10px;'>Manage Users</button> 
+                  <div class="btn form">
+                    <a (click)="navToManager(appProject.projectName)" [hidden]="!isManager"  > <li><u>Manage Users</u></li></a> 
                    
-                    <button (click)="navToBug(appProject.projectName)" class="btn btn-info">View details</button>
+                  <a (click)="navToBug(appProject.projectName,appProject.projectDescription)" style="display: flex;" ><li><u>View details</u></li></a> 
                     
-                  </div>
-               
+                
+                </div>
             </tr>
           </tbody>
           

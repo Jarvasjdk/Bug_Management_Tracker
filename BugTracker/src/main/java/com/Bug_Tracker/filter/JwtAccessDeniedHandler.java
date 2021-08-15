@@ -14,7 +14,8 @@ import java.io.OutputStream;
 
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
+// this class is triggered whenever a user trys to access something their not authorized to like a url,
+// spring first looks to see if any of my classes implement access denied handler class then if so throws this class exception
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
