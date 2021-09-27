@@ -77,9 +77,7 @@ public selectChangeHandler(event: any){
   private getUserRole(): string {
     
    return  this.authenticationService.getUserFromLocalCache().role;
-   // console.log(this.t);
-  //  return this.authenticationService.getUserFromLocalCache().role;
-
+   
   }
  public get isManager(): boolean {
    this.test =this.getUserRole() === 'ROLE_MANAGER'; 

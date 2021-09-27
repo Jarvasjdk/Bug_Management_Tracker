@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
         },
         (errorResponse: HttpErrorResponse) => {
           this.notificationService.sendNotification(NotificationType.ERROR, errorResponse.error.message);
-          //this.showLoading = false;
+         
         }
         
       )
